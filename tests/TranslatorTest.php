@@ -36,7 +36,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
             'key1' => 'Key1 in ns2 message (SYSTEM)',
             'sysonly' => 'Key only in system language (SYSTEM)',
             'rep1' => 'Replaced one {{name | replace:a:A}} at {{replaced_time | date:long:short}} (SYSTEM)',
-            'rep1_plural' => 'Replaced {{count}} {{name|replace:a:A}} at {{replaced_time | date:long:short}} (SYSTEM)',
+            'rep1_plural' => 'Replaced {{count}} {{name|replace:a:A}} at {{replaced_time | date:medium:short}} (SYSTEM)',
         ],
     ];
 
@@ -236,7 +236,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
         date_default_timezone_set("Europe/London");
 
         $this->assertEquals(
-            'Replaced 2 Apples at 2 January 1970 at 01:00 (SYSTEM)',
+            'Replaced 2 Apples at 2 Jan 1970, 01:00 (SYSTEM)',
             $tr->translate('ns2', 'rep1', null, ['name' => 'apples', 'replaced_time' => 86400], 2, 'en_GB')
         );
     }
