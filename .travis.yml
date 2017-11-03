@@ -1,0 +1,15 @@
+language: php
+
+php:
+  - 7.0
+  - 7.1
+
+matrix:
+  fast_finish: true
+
+install:
+  - sudo apt-get install -y --force-yes php-intl
+  - travis_retry composer self-update
+  - travis_wait composer install --no-interaction --prefer-source
+
+script: ./vendor/bin/phpunit
