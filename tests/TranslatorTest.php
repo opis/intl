@@ -230,12 +230,6 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
             $tr->translate('ns2', 'rep1', null, ['name' => 'apples', 'replaced_time' => 86400], 2)
         );
 
-        // Unregistered language
-
-        $this->assertEquals(
-            'Replaced 2 Apples at 2 janvier 1970 à 02:00 (SYSTEM)',
-            $tr->translate('ns2', 'rep1', null, ['name' => 'apples', 'replaced_time' => 86400], 2, 'fr_FR')
-        );
     }
 
 }

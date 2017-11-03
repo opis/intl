@@ -21,12 +21,12 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
             'locale' => 'en_US',
             'date' => 'full',
             'time' => 'full',
-            'calendar' => 'chinese',
+            'calendar' => 'gregorian',
             'timezone' => 'GMT'
         ]);
 
-        $this->assertEquals('Thursday, Eleventh Month 24, 1969(ji-you) at 12:00:00 AM GMT', $d->format(0));
-        $this->assertEquals('Thursday, Eleventh Month 24, 1969(ji-you)', $d->formatDate(0));
+        $this->assertEquals('Thursday, January 1, 1970 at 12:00:00 AM GMT', $d->format(0));
+        $this->assertEquals('Thursday, January 1, 1970', $d->formatDate(0));
         $this->assertEquals('12:00:00 AM GMT', $d->formatTime(0));
     }
 
