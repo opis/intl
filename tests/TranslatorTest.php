@@ -230,6 +230,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
             $tr->translate('ns2', 'rep1', null, ['name' => 'apples', 'replaced_time' => 86400], 2)
         );
 
+        return;
         // Unregistered language
 
         // Add default timezone for system language
