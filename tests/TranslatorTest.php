@@ -230,6 +230,15 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
             $tr->translate('ns2', 'rep1', null, ['name' => 'apples', 'replaced_time' => 86400], 2)
         );
 
+        // Unregistered language
+
+        // Add default timezone for system language
+        date_default_timezone_set("Europe/London");
+
+        $this->assertEquals(
+            'Replaced 2 Apples at 2 January 1970 at 01:00 (SYSTEM)',
+            $tr->translate('ns2', 'rep1', null, ['name' => 'apples', 'replaced_time' => 86400], 2, 'en_GB')
+        );
     }
 
 }
