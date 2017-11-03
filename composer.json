@@ -8,7 +8,7 @@
     "internationalization"
   ],
   "homepage": "http://www.opis.io/intl",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "authors": [
     {
       "name": "Sorin Sarca",
