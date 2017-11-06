@@ -15,7 +15,7 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Intl\Translator\Driver;
+namespace Opis\Intl\Translator\Drivers;
 
 class PHPFile extends AbstractFileDriver
 {

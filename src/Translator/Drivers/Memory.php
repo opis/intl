@@ -15,7 +15,7 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Intl\Translator\Driver;
+namespace Opis\Intl\Translator\Drivers;
 
 use Opis\Intl\Translator\IDriver;
 

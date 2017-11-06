@@ -3,7 +3,7 @@
 namespace Opis\Intl\Test;
 
 use Opis\Intl\Translator\AbstractTranslator;
-use Opis\Intl\Translator\Driver\Memory;
+use Opis\Intl\Translator\Drivers\Memory;
 use Opis\Intl\Translator\IDriver;
 use Opis\Intl\Translator\IFilter;
 use Opis\Intl\Translator\ITranslator;

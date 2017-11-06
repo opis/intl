@@ -15,7 +15,7 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Intl\Translator\Driver;
+namespace Opis\Intl\Translator\Drivers;
 
 use DirectoryIterator;
 use Opis\Intl\Translator\IDriver;
@@ -38,7 +38,7 @@ abstract class AbstractFileDriver implements IDriver
      * @param int $dir_mode
      * @param array|null $defaults
      */
-    public function __construct(string $dir, int $dir_mode = 0777, array $defaults = null)
+    public function __construct(string $dir, int $dir_mode = 0775, array $defaults = null)
     {
         $this->dir = $dir;
         $this->dirMode = $dir_mode;
@@ -224,7 +224,7 @@ abstract class AbstractFileDriver implements IDriver
      */
     protected function getDir(): string
     {
-        return $this->dir;
+        return $this->dir . DIRECTORY_SEPARATOR . $this->getExtension();
     }
 
     /**
@@ -243,4 +243,5 @@ abstract class AbstractFileDriver implements IDriver
      * @return string
      */
     abstract protected function exportFileContent(array $data): string;
+
 }
