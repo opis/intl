@@ -10,7 +10,7 @@ use Opis\Intl\Translator\ITranslator;
 use Opis\Intl\Translator\LanguageInfo;
 use Opis\Intl\Locale;
 
-class TranslatorTest extends \PHPUnit_Framework_TestCase
+class TranslatorTest extends \PHPUnit\Framework\TestCase
 {
 
     const SYSTEM_LANG = [
@@ -140,7 +140,6 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
     public function testTranslator()
     {
         $tr = $this->getTranslator();
-
         // ns1
 
         $this->assertEquals(

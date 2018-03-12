@@ -4,7 +4,7 @@ namespace Opis\Intl\Test;
 
 use Opis\Intl\NumberFormatter;
 
-class NumberTest extends \PHPUnit_Framework_TestCase
+class NumberTest extends \PHPUnit\Framework\TestCase
 {
 
     const NUMBER = 987612345.06789;

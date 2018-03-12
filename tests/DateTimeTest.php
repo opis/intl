@@ -4,7 +4,7 @@ namespace Opis\Intl\Test;
 
 use Opis\Intl\DateTimeFormatter;
 
-class DateTimeTest extends \PHPUnit_Framework_TestCase
+class DateTimeTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testFormat()

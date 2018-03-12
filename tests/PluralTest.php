@@ -4,7 +4,7 @@ namespace Opis\Intl\Test;
 
 use Opis\Intl\Plural;
 
-class PluralTest extends \PHPUnit_Framework_TestCase
+class PluralTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testForms()
