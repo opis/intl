@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2014-2017 The Opis Project
+ * Copyright 2014-2018 The Opis Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,10 @@
 namespace Opis\Intl\Translator;
 
 use Closure;
-use Opis\Intl\Locale;
+use Opis\Intl\ILocale;
 
 abstract class AbstractTranslator implements ITranslator
 {
-
     /** @var LanguageInfo[] */
     protected $languages = null;
 
@@ -43,7 +42,7 @@ abstract class AbstractTranslator implements ITranslator
      * @param IDriver $driver
      * @param string $default_language
      */
-    public function __construct(IDriver $driver, string $default_language = Locale::SYSTEM_LOCALE)
+    public function __construct(IDriver $driver, string $default_language = ILocale::SYSTEM_LOCALE)
     {
         // Accept from http
         $this->defaultLanguage = $default_language;
@@ -106,7 +105,7 @@ abstract class AbstractTranslator implements ITranslator
         $this->preloadAvailableLanguages();
 
         if (!array_key_exists($language, $this->languages)) {
-            $language = Locale::canonicalize($language);
+            // $language = Locale::canonicalize($language);
             // Create a new language info and do not cache it
             if (!isset($this->localeLanguages[$language])) {
                 $this->localeLanguages[$language] = LanguageInfo::create($language);
@@ -206,7 +205,7 @@ abstract class AbstractTranslator implements ITranslator
             return;
         }
         $this->languages = [];
-        $this->languages[Locale::SYSTEM_LOCALE] = null;
+        $this->languages[ILocale::SYSTEM_LOCALE] = null;
         foreach ($this->getDriver()->listLanguages() as $lang) {
             $this->languages[$lang] = null;
         }
@@ -221,10 +220,10 @@ abstract class AbstractTranslator implements ITranslator
     {
         $this->preloadAvailableLanguages();
         if (!array_key_exists($language, $this->languages)) {
-            $language = Locale::SYSTEM_LOCALE;
+            $language = ILocale::SYSTEM_LOCALE;
         }
         if (!isset($this->cache[$language][$ns])) {
-            if ($language === Locale::SYSTEM_LOCALE) {
+            if ($language === ILocale::SYSTEM_LOCALE) {
                 $this->cache[$language][$ns] = $this->loadSystemNS($ns);
             } else {
                 $this->cache[$language][$ns] = $this->getDriver()->loadNS($language, $ns);
@@ -265,7 +264,7 @@ abstract class AbstractTranslator implements ITranslator
 
         $languages = $language->fallback();
         array_unshift($languages, $language->locale()->id());
-        $languages[] = Locale::SYSTEM_LOCALE;
+        $languages[] = ILocale::SYSTEM_LOCALE;
         $languages = array_unique($languages);
 
         $path = explode('.', $key);

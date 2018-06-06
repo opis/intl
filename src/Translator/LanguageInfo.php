@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2014-2017 The Opis Project
+ * Copyright 2014-2018 The Opis Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -144,7 +144,7 @@ class LanguageInfo
         }
 
         if (!is_string($locale)) {
-            $locale = Locale::SYSTEM_LOCALE;
+            $locale = ILocale::SYSTEM_LOCALE;
         }
 
         return Locale::create($locale);

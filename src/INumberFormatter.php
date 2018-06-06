@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2014-2017 The Opis Project
+ * Copyright 2014-2018 The Opis Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,23 +19,22 @@ namespace Opis\Intl;
 
 interface INumberFormatter
 {
-
     /**
-     * @param $value
+     * @param int|float|string $value
      * @return string
      */
-    public function formatDecimal($value);
+    public function formatDecimal($value): string;
 
     /**
-     * @param $value
+     * @param int|float|string $value
      * @return string
      */
-    public function formatPercent($value);
+    public function formatPercent($value): string;
 
     /**
-     * @param $value
+     * @param int|float|string $value
      * @param string|null $currency
      * @return string
      */
-    public function formatCurrency($value, string $currency = null);
+    public function formatCurrency($value, string $currency = null): string;
 }

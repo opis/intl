@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2014-2017 The Opis Project
+ * Copyright 2014-2018 The Opis Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,9 @@ namespace Opis\Intl;
 
 interface ILocale
 {
+    /** Default locale string for system */
+    const SYSTEM_LOCALE = 'en__SYSTEM';
+
     /**
      * Get locale name
      * @return string

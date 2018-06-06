@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2014-2017 The Opis Project
+ * Copyright 2014-2018 The Opis Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,93 +17,26 @@
 
 namespace Opis\Intl;
 
-use NumberFormatter as IntlNumberFormatter,
-    Locale as IntlLocale;
+use NumberFormatter as IntlNumberFormatter;
 
 class NumberFormatter implements INumberFormatter
 {
-
-    /** Number attrs */
-    const NUMBER_ATTRS = [
-        'PARSE_INT_ONLY'          => IntlNumberFormatter::PARSE_INT_ONLY,
-        'GROUPING_USED'           => IntlNumberFormatter::GROUPING_USED,
-        'DECIMAL_ALWAYS_SHOWN'    => IntlNumberFormatter::DECIMAL_ALWAYS_SHOWN,
-        'MAX_INTEGER_DIGITS'      => IntlNumberFormatter::MAX_INTEGER_DIGITS,
-        'MIN_INTEGER_DIGITS'      => IntlNumberFormatter::MIN_INTEGER_DIGITS,
-        'INTEGER_DIGITS'          => IntlNumberFormatter::INTEGER_DIGITS,
-        'MAX_FRACTION_DIGITS'     => IntlNumberFormatter::MAX_FRACTION_DIGITS,
-        'MIN_FRACTION_DIGITS'     => IntlNumberFormatter::MIN_FRACTION_DIGITS,
-        'FRACTION_DIGITS'         => IntlNumberFormatter::FRACTION_DIGITS,
-        'MULTIPLIER'              => IntlNumberFormatter::MULTIPLIER,
-        'GROUPING_SIZE'           => IntlNumberFormatter::GROUPING_SIZE,
-        'ROUNDING_MODE'           => [IntlNumberFormatter::ROUNDING_MODE, [
-            'CEILING'  => IntlNumberFormatter::ROUND_CEILING,
-            'DOWN'     => IntlNumberFormatter::ROUND_DOWN,
-            'FLOOR'    => IntlNumberFormatter::ROUND_FLOOR,
-            'HALFDOWN' => IntlNumberFormatter::ROUND_HALFDOWN,
-            'HALFEVEN' => IntlNumberFormatter::ROUND_HALFEVEN,
-            'HALFUP'   => IntlNumberFormatter::ROUND_HALFUP,
-            'UP'       => IntlNumberFormatter::ROUND_UP,
-        ]],
-        'ROUNDING_INCREMENT'      => IntlNumberFormatter::ROUNDING_INCREMENT,
-        'FORMAT_WIDTH'            => IntlNumberFormatter::FORMAT_WIDTH,
-        'PADDING_POSITION'        => [IntlNumberFormatter::PADDING_POSITION, [
-            'AFTER_PREFIX'  => IntlNumberFormatter::PAD_AFTER_PREFIX,
-            'AFTER_SUFFIX'  => IntlNumberFormatter::PAD_AFTER_SUFFIX,
-            'BEFORE_PREFIX' => IntlNumberFormatter::PAD_BEFORE_PREFIX,
-            'BEFORE_SUFFIX' => IntlNumberFormatter::PAD_BEFORE_SUFFIX,
-        ]],
-        'SECONDARY_GROUPING_SIZE' => IntlNumberFormatter::SECONDARY_GROUPING_SIZE,
-        'SIGNIFICANT_DIGITS_USED' => IntlNumberFormatter::SIGNIFICANT_DIGITS_USED,
-        'MIN_SIGNIFICANT_DIGITS'  => IntlNumberFormatter::MIN_SIGNIFICANT_DIGITS,
-        'MAX_SIGNIFICANT_DIGITS'  => IntlNumberFormatter::MAX_SIGNIFICANT_DIGITS,
-    ];
-
-    /** Number text attrs */
-    const NUMBER_TEXT_ATTRS = [
-        'POSITIVE_PREFIX'   => IntlNumberFormatter::POSITIVE_PREFIX,
-        'POSITIVE_SUFFIX'   => IntlNumberFormatter::POSITIVE_SUFFIX,
-        'NEGATIVE_PREFIX'   => IntlNumberFormatter::NEGATIVE_PREFIX,
-        'NEGATIVE_SUFFIX'   => IntlNumberFormatter::NEGATIVE_SUFFIX,
-        'PADDING_CHARACTER' => IntlNumberFormatter::PADDING_CHARACTER,
-        'CURRENCY_CODE'     => IntlNumberFormatter::CURRENCY_CODE,
-    ];
-
-    /** Number symbols */
-    const NUMBER_SYMBOLS = [
-        'DECIMAL_SEPARATOR_SYMBOL'           => IntlNumberFormatter::DECIMAL_SEPARATOR_SYMBOL,
-        'GROUPING_SEPARATOR_SYMBOL'          => IntlNumberFormatter::GROUPING_SEPARATOR_SYMBOL,
-        'PERCENT_SYMBOL'                     => IntlNumberFormatter::PERCENT_SYMBOL,
-        'DIGIT_SYMBOL'                       => IntlNumberFormatter::DIGIT_SYMBOL,
-        'MINUS_SIGN_SYMBOL'                  => IntlNumberFormatter::MINUS_SIGN_SYMBOL,
-        'PLUS_SIGN_SYMBOL'                   => IntlNumberFormatter::PLUS_SIGN_SYMBOL,
-        'CURRENCY_SYMBOL'                    => IntlNumberFormatter::CURRENCY_SYMBOL,
-        'MONETARY_SEPARATOR_SYMBOL'          => IntlNumberFormatter::MONETARY_SEPARATOR_SYMBOL,
-        'EXPONENTIAL_SYMBOL'                 => IntlNumberFormatter::EXPONENTIAL_SYMBOL,
-        'PERMILL_SYMBOL'                     => IntlNumberFormatter::PERMILL_SYMBOL,
-        'PAD_ESCAPE_SYMBOL'                  => IntlNumberFormatter::PAD_ESCAPE_SYMBOL,
-        'INFINITY_SYMBOL'                    => IntlNumberFormatter::INFINITY_SYMBOL,
-        'NAN_SYMBOL'                         => IntlNumberFormatter::NAN_SYMBOL,
-        'SIGNIFICANT_DIGIT_SYMBOL'           => IntlNumberFormatter::SIGNIFICANT_DIGIT_SYMBOL,
-        'MONETARY_GROUPING_SEPARATOR_SYMBOL' => IntlNumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL,
-    ];
-
-    /** @var IntlNumberFormatter */
+    /** @var IntlNumberFormatter|null */
     protected $decimal;
 
-    /** @var IntlNumberFormatter */
+    /** @var IntlNumberFormatter|null */
     protected $currency;
 
-    /** @var IntlNumberFormatter */
+    /** @var IntlNumberFormatter|null */
     protected $percent;
 
     /**
      * NumberFormatter constructor.
-     * @param IntlNumberFormatter $decimal
-     * @param IntlNumberFormatter $currency
-     * @param IntlNumberFormatter $percent
+     * @param IntlNumberFormatter|null $decimal
+     * @param IntlNumberFormatter|null $currency
+     * @param IntlNumberFormatter|null $percent
      */
-    public function __construct(IntlNumberFormatter $decimal, IntlNumberFormatter $currency, IntlNumberFormatter $percent)
+    public function __construct(IntlNumberFormatter $decimal = null, IntlNumberFormatter $currency = null, IntlNumberFormatter $percent = null)
     {
         $this->decimal = $decimal;
         $this->currency = $currency;
@@ -111,50 +44,36 @@ class NumberFormatter implements INumberFormatter
     }
 
     /**
-     * @return IntlNumberFormatter
-     */
-    public function decimal(): IntlNumberFormatter
-    {
-        return $this->decimal;
-    }
-
-    /**
-     * @return IntlNumberFormatter
-     */
-    public function currency(): IntlNumberFormatter
-    {
-        return $this->currency;
-    }
-
-    /**
-     * @return IntlNumberFormatter
-     */
-    public function percent(): IntlNumberFormatter
-    {
-        return $this->percent;
-    }
-
-    /**
      * @inheritdoc
      */
-    public function formatDecimal($value)
+    public function formatDecimal($value): string
     {
+        if ($this->decimal === null) {
+            return number_format($value, 2);
+        }
         return $this->decimal->format($value);
     }
 
     /**
      * @inheritdoc
      */
-    public function formatPercent($value)
+    public function formatPercent($value): string
     {
+        if ($this->percent === null) {
+            return number_format($value, 2) . '%';
+        }
         return $this->percent->format($value);
     }
 
     /**
      * @inheritdoc
      */
-    public function formatCurrency($value, string $currency = null)
+    public function formatCurrency($value, string $currency = null): string
     {
+        if ($this->currency === null) {
+            return number_format($value, 2) . strtoupper($currency);
+        }
+
         if ($currency === null) {
             $currency = $this->currency->getTextAttribute(IntlNumberFormatter::CURRENCY_CODE);
         }
@@ -171,9 +90,12 @@ class NumberFormatter implements INumberFormatter
      */
     public static function create(string $locale = null, $number = null, $currency = null, $percent = null): self
     {
-        $locale = $locale ?? IntlLocale::getDefault();
+        if (!IntlChecker::extensionExists()) {
+            return new static();
+        }
+
         if (!$locale) {
-            $locale = Locale::SYSTEM_LOCALE;
+            $locale = ILocale::SYSTEM_LOCALE;
         }
 
         return new static(
@@ -190,6 +112,10 @@ class NumberFormatter implements INumberFormatter
      */
     public static function fromArray(array $number, string $locale = null): self
     {
+        if (!IntlChecker::extensionExists()) {
+            return new static();
+        }
+
         $locale = $number['locale'] ?? $locale;
 
         return static::create(
@@ -203,13 +129,19 @@ class NumberFormatter implements INumberFormatter
     /**
      * @param IntlNumberFormatter $number
      * @param array $settings
+     * @param array|null $map
+     * @return IntlNumberFormatter
      */
-    public static function applyNumberSettings(IntlNumberFormatter $number, array $settings)
+    protected static function applyNumberSettings(IntlNumberFormatter $number, array $settings, array $map = null): IntlNumberFormatter
     {
+        if ($map === null) {
+            $map = static::getSettingsMap();
+        }
+
         foreach ($settings as $key => $value) {
             $key = strtoupper($key);
-            if (isset(static::NUMBER_ATTRS[$key])) {
-                $key = static::NUMBER_ATTRS[$key];
+            if (isset($map['NUMBER_ATTRS'][$key])) {
+                $key = $map['NUMBER_ATTRS'][$key];
                 if (!is_int($value)) {
                     if (!is_array($key)) {
                         continue;
@@ -222,20 +154,90 @@ class NumberFormatter implements INumberFormatter
                     $key = $key[0];
                 }
                 $number->setAttribute($key, $value);
-            } elseif (isset(static::NUMBER_TEXT_ATTRS[$key])) {
-                $key = static::NUMBER_TEXT_ATTRS[$key];
+            } elseif (isset($map['NUMBER_TEXT_ATTRS'][$key])) {
+                $key = $map['NUMBER_TEXT_ATTRS'][$key];
                 if (!is_string($value)) {
                     $value .= '';
                 }
                 $number->setTextAttribute($key, $value);
-            } elseif (isset(static::NUMBER_SYMBOLS[$key])) {
-                $key = static::NUMBER_SYMBOLS[$key];
+            } elseif (isset($map['NUMBER_SYMBOLS'][$key])) {
+                $key = $map['NUMBER_SYMBOLS'][$key];
                 if (!is_string($value)) {
                     $value .= '';
                 }
                 $number->setSymbol($key, $value);
             }
         }
+
+        return $number;
+    }
+
+    /**
+     * @return array
+     */
+    protected static function getSettingsMap(): array
+    {
+        return [
+            'NUMBER_ATTRS' => [
+                'PARSE_INT_ONLY'          => IntlNumberFormatter::PARSE_INT_ONLY,
+                'GROUPING_USED'           => IntlNumberFormatter::GROUPING_USED,
+                'DECIMAL_ALWAYS_SHOWN'    => IntlNumberFormatter::DECIMAL_ALWAYS_SHOWN,
+                'MAX_INTEGER_DIGITS'      => IntlNumberFormatter::MAX_INTEGER_DIGITS,
+                'MIN_INTEGER_DIGITS'      => IntlNumberFormatter::MIN_INTEGER_DIGITS,
+                'INTEGER_DIGITS'          => IntlNumberFormatter::INTEGER_DIGITS,
+                'MAX_FRACTION_DIGITS'     => IntlNumberFormatter::MAX_FRACTION_DIGITS,
+                'MIN_FRACTION_DIGITS'     => IntlNumberFormatter::MIN_FRACTION_DIGITS,
+                'FRACTION_DIGITS'         => IntlNumberFormatter::FRACTION_DIGITS,
+                'MULTIPLIER'              => IntlNumberFormatter::MULTIPLIER,
+                'GROUPING_SIZE'           => IntlNumberFormatter::GROUPING_SIZE,
+                'ROUNDING_MODE'           => [IntlNumberFormatter::ROUNDING_MODE, [
+                    'CEILING'  => IntlNumberFormatter::ROUND_CEILING,
+                    'DOWN'     => IntlNumberFormatter::ROUND_DOWN,
+                    'FLOOR'    => IntlNumberFormatter::ROUND_FLOOR,
+                    'HALFDOWN' => IntlNumberFormatter::ROUND_HALFDOWN,
+                    'HALFEVEN' => IntlNumberFormatter::ROUND_HALFEVEN,
+                    'HALFUP'   => IntlNumberFormatter::ROUND_HALFUP,
+                    'UP'       => IntlNumberFormatter::ROUND_UP,
+                ]],
+                'ROUNDING_INCREMENT'      => IntlNumberFormatter::ROUNDING_INCREMENT,
+                'FORMAT_WIDTH'            => IntlNumberFormatter::FORMAT_WIDTH,
+                'PADDING_POSITION'        => [IntlNumberFormatter::PADDING_POSITION, [
+                    'AFTER_PREFIX'  => IntlNumberFormatter::PAD_AFTER_PREFIX,
+                    'AFTER_SUFFIX'  => IntlNumberFormatter::PAD_AFTER_SUFFIX,
+                    'BEFORE_PREFIX' => IntlNumberFormatter::PAD_BEFORE_PREFIX,
+                    'BEFORE_SUFFIX' => IntlNumberFormatter::PAD_BEFORE_SUFFIX,
+                ]],
+                'SECONDARY_GROUPING_SIZE' => IntlNumberFormatter::SECONDARY_GROUPING_SIZE,
+                'SIGNIFICANT_DIGITS_USED' => IntlNumberFormatter::SIGNIFICANT_DIGITS_USED,
+                'MIN_SIGNIFICANT_DIGITS'  => IntlNumberFormatter::MIN_SIGNIFICANT_DIGITS,
+                'MAX_SIGNIFICANT_DIGITS'  => IntlNumberFormatter::MAX_SIGNIFICANT_DIGITS,
+            ],
+            'NUMBER_TEXT_ATTRS' => [
+                'POSITIVE_PREFIX'   => IntlNumberFormatter::POSITIVE_PREFIX,
+                'POSITIVE_SUFFIX'   => IntlNumberFormatter::POSITIVE_SUFFIX,
+                'NEGATIVE_PREFIX'   => IntlNumberFormatter::NEGATIVE_PREFIX,
+                'NEGATIVE_SUFFIX'   => IntlNumberFormatter::NEGATIVE_SUFFIX,
+                'PADDING_CHARACTER' => IntlNumberFormatter::PADDING_CHARACTER,
+                'CURRENCY_CODE'     => IntlNumberFormatter::CURRENCY_CODE,
+            ],
+            'NUMBER_SYMBOLS' => [
+                'DECIMAL_SEPARATOR_SYMBOL'           => IntlNumberFormatter::DECIMAL_SEPARATOR_SYMBOL,
+                'GROUPING_SEPARATOR_SYMBOL'          => IntlNumberFormatter::GROUPING_SEPARATOR_SYMBOL,
+                'PERCENT_SYMBOL'                     => IntlNumberFormatter::PERCENT_SYMBOL,
+                'DIGIT_SYMBOL'                       => IntlNumberFormatter::DIGIT_SYMBOL,
+                'MINUS_SIGN_SYMBOL'                  => IntlNumberFormatter::MINUS_SIGN_SYMBOL,
+                'PLUS_SIGN_SYMBOL'                   => IntlNumberFormatter::PLUS_SIGN_SYMBOL,
+                'CURRENCY_SYMBOL'                    => IntlNumberFormatter::CURRENCY_SYMBOL,
+                'MONETARY_SEPARATOR_SYMBOL'          => IntlNumberFormatter::MONETARY_SEPARATOR_SYMBOL,
+                'EXPONENTIAL_SYMBOL'                 => IntlNumberFormatter::EXPONENTIAL_SYMBOL,
+                'PERMILL_SYMBOL'                     => IntlNumberFormatter::PERMILL_SYMBOL,
+                'PAD_ESCAPE_SYMBOL'                  => IntlNumberFormatter::PAD_ESCAPE_SYMBOL,
+                'INFINITY_SYMBOL'                    => IntlNumberFormatter::INFINITY_SYMBOL,
+                'NAN_SYMBOL'                         => IntlNumberFormatter::NAN_SYMBOL,
+                'SIGNIFICANT_DIGIT_SYMBOL'           => IntlNumberFormatter::SIGNIFICANT_DIGIT_SYMBOL,
+                'MONETARY_GROUPING_SEPARATOR_SYMBOL' => IntlNumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL,
+            ],
+        ];
     }
 
     /**
@@ -243,7 +245,7 @@ class NumberFormatter implements INumberFormatter
      * @param string|array|null $number
      * @return IntlNumberFormatter
      */
-    public static function createDecimal(string $locale, $number = null): IntlNumberFormatter
+    protected static function createDecimal(string $locale, $number = null): IntlNumberFormatter
     {
         $pattern = null;
         if (is_string($number)) {
@@ -263,7 +265,7 @@ class NumberFormatter implements INumberFormatter
      * @param string|array|null $percent
      * @return IntlNumberFormatter
      */
-    public static function createPercent(string $locale, $percent = null): IntlNumberFormatter
+    protected static function createPercent(string $locale, $percent = null): IntlNumberFormatter
     {
         $pattern = null;
         if (is_string($percent)) {
@@ -283,7 +285,7 @@ class NumberFormatter implements INumberFormatter
      * @param string|array|null $currency
      * @return IntlNumberFormatter
      */
-    public static function createCurrency(string $locale, $currency = null): IntlNumberFormatter
+    protected static function createCurrency(string $locale, $currency = null): IntlNumberFormatter
     {
         if (is_string($currency)) {
             $locale .= '@currency=' . $currency;
@@ -302,7 +304,7 @@ class NumberFormatter implements INumberFormatter
      * @param string|null $pattern
      * @return IntlNumberFormatter
      */
-    public static function createIntlNumber(string $locale, int $type, string $pattern = null): IntlNumberFormatter
+    protected static function createIntlNumber(string $locale, int $type, string $pattern = null): IntlNumberFormatter
     {
         if ($pattern !== null && $pattern !== '') {
             $type = IntlNumberFormatter::PATTERN_DECIMAL;
@@ -312,5 +314,4 @@ class NumberFormatter implements INumberFormatter
 
         return new IntlNumberFormatter($locale, $type, $pattern);
     }
-
 }

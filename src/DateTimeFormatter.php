@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2014-2017 The Opis Project
+ * Copyright 2014-2018 The Opis Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,49 +27,16 @@ use IntlDateFormatter,
 
 class DateTimeFormatter implements IDateTimeFormatter
 {
-
-    const FORMAT_TYPES = [
-        'none'   => IntlDateFormatter::NONE,
-        'short'  => IntlDateFormatter::SHORT,
-        'medium' => IntlDateFormatter::MEDIUM,
-        'long'   => IntlDateFormatter::LONG,
-        'full'   => IntlDateFormatter::FULL,
-    ];
-
-    /** @var IntlDateFormatter */
+    /** @var IntlDateFormatter|null */
     protected $formatter;
 
     /**
      * DateTimeFormatter constructor.
      * @param IntlDateFormatter $formatter
      */
-    public function __construct(IntlDateFormatter $formatter)
+    public function __construct(IntlDateFormatter $formatter = null)
     {
         $this->formatter = $formatter;
-    }
-
-    /**
-     * @return IntlDateFormatter
-     */
-    public function formatter(): IntlDateFormatter
-    {
-        return $this->formatter;
-    }
-
-    /**
-     * @return IntlCalendar
-     */
-    public function calendar(): IntlCalendar
-    {
-        return $this->formatter->getCalendarObject();
-    }
-
-    /**
-     * @return bool|IntlTimeZone
-     */
-    public function timezone()
-    {
-        return $this->formatter->getTimeZone();
     }
 
     /**
@@ -79,6 +46,28 @@ class DateTimeFormatter implements IDateTimeFormatter
      */
     protected function parseValue($value, $timezone = null)
     {
+        if ($this->formatter === null) {
+            if (is_int($value)) {
+                $value = (new DateTime())->setTimestamp($value);
+            }
+            elseif (is_string($value)) {
+                $value = new DateTime($value);
+            }
+            elseif (!($value instanceof DateTimeInterface)) {
+                $value = new DateTime();
+            }
+
+            if ($timezone) {
+                if (is_string($timezone)) {
+                    $value = $value->setTimezone(new DateTimeZone($timezone));
+                }
+                elseif ($timezone instanceof DateTimeZone) {
+                    $value = $value->setTimezone($timezone);
+                }
+            }
+
+            return $value;
+        }
 
         if ($value instanceof IntlCalendar) {
             if ($timezone !== null) {
@@ -90,10 +79,10 @@ class DateTimeFormatter implements IDateTimeFormatter
         }
 
 
-        $calendar = clone $this->calendar();
+        $calendar = clone $this->formatter->getCalendarObject();
 
         if ($value === null) {
-            $value = new DateTime("now");
+            $value = new DateTime();
         }
         if (is_int($value)) {
             $calendar->setTime($value * 1000);
@@ -124,10 +113,25 @@ class DateTimeFormatter implements IDateTimeFormatter
      */
     public function format($value = null, $date_format = null, $time_format = null, $timezone = null)
     {
-
-        $value = $this->parseValue($value, $timezone);
         if ($timezone === true || $timezone === 'default') {
             $timezone = date_default_timezone_get();
+        }
+        $value = $this->parseValue($value, $timezone);
+        if ($this->formatter === null) {
+            if ($date_format !== false) {
+                $format = 'F j, Y';
+                if ($time_format !== false) {
+                    $format .= ', g:i A';
+                }
+            }
+            elseif ($time_format !== false) {
+                $format = 'g:i A';
+            }
+            else {
+                $format = DateTimeInterface::ATOM;
+            }
+
+            return $value->format($format);
         }
 
         if ($date_format === null && $time_format === null && $timezone == null) {
@@ -171,9 +175,13 @@ class DateTimeFormatter implements IDateTimeFormatter
      */
     public function formatPattern($value, string $pattern, $timezone = null)
     {
-        $value = $this->parseValue($value, $timezone);
         if ($timezone === true || $timezone === 'default') {
             $timezone = date_default_timezone_get();
+        }
+        $value = $this->parseValue($value, $timezone);
+
+        if ($this->formatter === null) {
+            return $value->format(DateTimeInterface::ATOM);
         }
 
         return $this->formatter->formatObject($value, $pattern, $this->formatter->getLocale(IntlLocale::VALID_LOCALE));
@@ -187,8 +195,13 @@ class DateTimeFormatter implements IDateTimeFormatter
      */
     public function formatDate($value = null, $format = null, $timezone = null)
     {
-        if (is_string($format) && !isset(static::FORMAT_TYPES[$format])) {
-            return $this->formatPattern($value, $format, $timezone);
+        if (is_string($format) && $this->formatter) {
+            if (-100 !== $f = static::getFormat($format, -100)) {
+                return $this->formatPattern($value, $format, $timezone);
+            }
+        }
+        else {
+            $format = null;
         }
 
         return $this->format($value, $format, false, $timezone);
@@ -202,8 +215,13 @@ class DateTimeFormatter implements IDateTimeFormatter
      */
     public function formatTime($value = null, $format = null, $timezone = null)
     {
-        if (is_string($format) && !isset(static::FORMAT_TYPES[$format])) {
-            return $this->formatPattern($value, $format, $timezone);
+        if ($this->formatter && is_string($format)) {
+            if (-100 !== $f = static::getFormat($format, -100)) {
+                return $this->formatPattern($value, $format, $timezone);
+            }
+        }
+        else {
+            $format = null;
         }
 
         return $this->format($value, false, $format, $timezone);
@@ -222,8 +240,19 @@ class DateTimeFormatter implements IDateTimeFormatter
             return $default;
         } elseif (is_int($format)) {
             return $format;
-        } elseif (is_string($format) && isset(static::FORMAT_TYPES[$format])) {
-            return static::FORMAT_TYPES[$format];
+        } elseif (is_string($format)) {
+            switch ($format) {
+                case 'none':
+                    return IntlDateFormatter::NONE;
+                case 'short':
+                    return IntlDateFormatter::SHORT;
+                case 'medium':
+                    return IntlDateFormatter::MEDIUM;
+                case 'long':
+                    return IntlDateFormatter::LONG;
+                case 'full':
+                    return IntlDateFormatter::FULL;
+            }
         }
 
         return $default;
@@ -241,6 +270,10 @@ class DateTimeFormatter implements IDateTimeFormatter
      */
     public static function create(string $locale, string $date = null, string $time = null, string $pattern = null, $calendar = null, $timezone = null): self
     {
+        if (!IntlChecker::extensionExists()) {
+            return new static();
+        }
+
         $date = static::getFormat($date, IntlDateFormatter::SHORT);
         $time = static::getFormat($time, IntlDateFormatter::SHORT);
 
@@ -267,7 +300,11 @@ class DateTimeFormatter implements IDateTimeFormatter
      */
     public static function fromArray(array $datetime, string $locale = null): self
     {
-        $locale = $datetime['locale'] ?? $locale ?? Locale::SYSTEM_LOCALE;
+        if (!IntlChecker::extensionExists()) {
+            return new static();
+        }
+
+        $locale = $datetime['locale'] ?? $locale ?? ILocale::SYSTEM_LOCALE;
 
         return static::create(
             $locale,

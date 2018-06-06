@@ -17,24 +17,20 @@
 
 namespace Opis\Intl;
 
-interface IPlural
+class IntlChecker
 {
-    /**
-     * Number of plural
-     * @return int
-     */
-    public function forms(): int;
+    /** @var null|bool */
+    protected static $hasExtension = null;
 
     /**
-     * Get plural form from count
-     * @param int $count
-     * @return int
+     * @return bool
      */
-    public function form(int $count): int;
+    public static function extensionExists(): bool
+    {
+        if (self::$hasExtension === null) {
+            self::$hasExtension = extension_loaded('intl');
+        }
 
-    /**
-     * Get plural rule
-     * @return string
-     */
-    public function rule(): string;
+        return self::$hasExtension;
+    }
 }
