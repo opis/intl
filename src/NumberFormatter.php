@@ -44,6 +44,30 @@ class NumberFormatter implements INumberFormatter
     }
 
     /**
+     * @return IntlNumberFormatter|null
+     */
+    public function decimal()
+    {
+        return $this->decimal;
+    }
+
+    /**
+     * @return IntlNumberFormatter|null
+     */
+    public function currency()
+    {
+        return $this->currency;
+    }
+
+    /**
+     * @return IntlNumberFormatter|null
+     */
+    public function percent()
+    {
+        return $this->percent;
+    }
+
+    /**
      * @inheritdoc
      */
     public function formatDecimal($value): string

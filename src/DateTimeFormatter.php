@@ -40,6 +40,36 @@ class DateTimeFormatter implements IDateTimeFormatter
     }
 
     /**
+     * @return IntlDateFormatter|null
+     */
+    public function formatter()
+    {
+        return $this->formatter;
+    }
+
+    /**
+     * @return IntlCalendar|null
+     */
+    public function calendar()
+    {
+        if ($this->formatter === null) {
+            return null;
+        }
+        return $this->formatter->getCalendarObject();
+    }
+
+    /**
+     * @return IntlTimeZone|null
+     */
+    public function timezone()
+    {
+        if ($this->formatter === null) {
+            return null;
+        }
+        return $this->formatter->getTimeZone() ?: null;
+    }
+
+    /**
      * @param int|string|DateTimeInterface|IntlCalendar|null $value
      * @param string|DateTimeZone|IntlTimeZone|null $timezone
      * @return DateTime|IntlCalendar
