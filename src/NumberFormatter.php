@@ -73,7 +73,7 @@ class NumberFormatter implements INumberFormatter
     public function formatDecimal($value): string
     {
         if ($this->decimal === null) {
-            return number_format($value, 2);
+            return number_format(round($value, 3), 3);
         }
         return $this->decimal->format($value);
     }
@@ -84,7 +84,8 @@ class NumberFormatter implements INumberFormatter
     public function formatPercent($value): string
     {
         if ($this->percent === null) {
-            return number_format($value, 2) . '%';
+            $value *= 100;
+            return number_format($value, $value == (int) $value ? 0 : 2) . '%';
         }
         return $this->percent->format($value);
     }
@@ -95,7 +96,22 @@ class NumberFormatter implements INumberFormatter
     public function formatCurrency($value, string $currency = null): string
     {
         if ($this->currency === null) {
-            return number_format($value, 2) . strtoupper($currency);
+            $map = [
+                'USD' => '$',
+                'GBP' => '£',
+                'EUR' => '€'
+            ];
+            if ($currency === null || $currency === '') {
+                $currency = 'USD';
+            }
+            else {
+                $currency = strtoupper(trim($currency));
+            }
+            if (isset($map[$currency])) {
+                return $map[$currency] . number_format($value, 2);
+            }
+
+            return number_format($value, 2) . $currency;
         }
 
         if ($currency === null) {

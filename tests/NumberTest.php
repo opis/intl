@@ -16,6 +16,7 @@ class NumberTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('987,612,345.068', $n->formatDecimal(self::NUMBER));
         $this->assertEquals('$987,612,345.07', $n->formatCurrency(self::NUMBER));
         $this->assertEquals('£987,612,345.07', $n->formatCurrency(self::NUMBER, 'GBP'));
+        $this->assertEquals('€987,612,345.07', $n->formatCurrency(self::NUMBER, 'EUR'));
         $this->assertEquals('25%', $n->formatPercent(0.25));
     }
 
@@ -37,6 +38,7 @@ class NumberTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('987,612,345.067', $n->formatDecimal(self::NUMBER));
         $this->assertEquals('€987,612,345.07', $n->formatCurrency(self::NUMBER));
         $this->assertEquals('£987,612,345.07', $n->formatCurrency(self::NUMBER, 'GBP'));
+        $this->assertEquals('$987,612,345.07', $n->formatCurrency(self::NUMBER, 'USD'));
         $this->assertEquals('25/100', $n->formatPercent(0.25));
     }
 
