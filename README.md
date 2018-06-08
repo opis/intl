@@ -2,7 +2,7 @@ Opis Intl
 =========
 [![Build Status](https://travis-ci.org/opis/intl.svg?branch=master)](https://travis-ci.org/opis/intl)
 [![Latest Stable Version](https://poser.pugx.org/opis/intl/version.png)](https://packagist.org/packages/opis/intl)
-[![Latest Unstable Version](https://poser.pugx.org/opis/intl/v/unstable.png)](//packagist.org/packages/opis/intl)
+[![Latest Unstable Version](https://poser.pugx.org/opis/intl/v/unstable.png)](https://packagist.org/packages/opis/intl)
 [![License](https://poser.pugx.org/opis/intl/license.png)](https://packagist.org/packages/opis/intl)
 
 Internationalization library
@@ -16,7 +16,7 @@ Internationalization library
 ### Requirements
 
 * PHP 7.0 or higher
-* PHP-INTL extension
+* intl extension (recommended)
 
 ### Installation
 
@@ -42,4 +42,4 @@ require_once 'path/to/intl-master/autoload.php';
 
 ### Documentation
 
-Examples and documentation can be found [here](http://opis.io/intl).
+Examples and documentation can be found [here](https://www.opis.io/intl).
