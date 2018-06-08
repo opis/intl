@@ -219,26 +219,15 @@ class TranslatorTest extends \PHPUnit\Framework\TestCase
             $tr->translate('ns2', 'otherkey')
         );
 
-        $this->assertEquals(
+        $this->assertContains($tr->translate('ns2', 'rep1', null, ['name' => 'apple', 'replaced_time' => 0], 1), [
+            'Replaced one Apple at January 1, 1970, 12:00 AM (ENGLISH)', // no intl
             'Replaced one Apple at January 1, 1970 at 12:00 AM (ENGLISH)',
-            $tr->translate('ns2', 'rep1', null, ['name' => 'apple', 'replaced_time' => 0], 1)
-        );
+        ]);
 
-        $this->assertEquals(
+        $this->assertContains($tr->translate('ns2', 'rep1', null, ['name' => 'apples', 'replaced_time' => 86400], 2), [
+            'Replaced 2 Apples at January 2, 1970, 12:00 AM (ENGLISH)', // no intl
             'Replaced 2 Apples at January 2, 1970 at 12:00 AM (ENGLISH)',
-            $tr->translate('ns2', 'rep1', null, ['name' => 'apples', 'replaced_time' => 86400], 2)
-        );
-
-        return;
-        // Unregistered language
-
-        // Add default timezone for system language
-        date_default_timezone_set("Europe/London");
-
-        $this->assertEquals(
-            'Replaced 2 Apples at 2 Jan 1970, 01:00 (SYSTEM)',
-            $tr->translate('ns2', 'rep1', null, ['name' => 'apples', 'replaced_time' => 86400], 2, 'en_GB')
-        );
+        ]);
     }
 
 }

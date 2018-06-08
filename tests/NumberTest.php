@@ -2,7 +2,9 @@
 
 namespace Opis\Intl\Test;
 
-use Opis\Intl\NumberFormatter;
+use Opis\Intl\{
+    IntlChecker, NumberFormatter
+};
 
 class NumberTest extends \PHPUnit\Framework\TestCase
 {
@@ -35,11 +37,13 @@ class NumberTest extends \PHPUnit\Framework\TestCase
             ]
         ]);
 
-        $this->assertEquals('987,612,345.067', $n->formatDecimal(self::NUMBER));
-        $this->assertEquals('€987,612,345.07', $n->formatCurrency(self::NUMBER));
+        $intl = IntlChecker::extensionExists();
+
+        $this->assertEquals($intl ? '987,612,345.067' : '987,612,345.068', $n->formatDecimal(self::NUMBER));
+        $this->assertEquals($intl ? '€987,612,345.07' : '$987,612,345.07', $n->formatCurrency(self::NUMBER));
         $this->assertEquals('£987,612,345.07', $n->formatCurrency(self::NUMBER, 'GBP'));
         $this->assertEquals('$987,612,345.07', $n->formatCurrency(self::NUMBER, 'USD'));
-        $this->assertEquals('25/100', $n->formatPercent(0.25));
+        $this->assertEquals($intl ? '25/100' : '25%', $n->formatPercent(0.25));
     }
 
 

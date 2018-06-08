@@ -73,7 +73,8 @@ class NumberFormatter implements INumberFormatter
     public function formatDecimal($value): string
     {
         if ($this->decimal === null) {
-            return number_format(round($value, 3), 3);
+            $value = round($value, 3);
+            return number_format($value, $value == (int) $value ? 0 : 3);
         }
         return $this->decimal->format($value);
     }
