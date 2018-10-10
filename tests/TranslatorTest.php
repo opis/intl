@@ -37,10 +37,10 @@ class TranslatorTest extends \PHPUnit\Framework\TestCase
             'key2_1' => 'Key2 messages (SYSTEM)',
 
             'key3' => 'Key3 has one message (SYSTEM)',
-            'key3_plural' => 'Key3 has {{count}} messages (SYSTEM)',
+            'key3_plural' => 'Key3 has {count} messages (SYSTEM)',
 
             'key3_ctx' => 'Key3 has one message in this context (SYSTEM)',
-            'key3_ctx_plural' => 'Key3 has {{count}} messages in this context (SYSTEM)',
+            'key3_ctx_plural' => 'Key3 has {count} messages in this context (SYSTEM)',
 
             'nested' => [
                 'nested1' => 'Nested message (SYSTEM)',
@@ -50,8 +50,8 @@ class TranslatorTest extends \PHPUnit\Framework\TestCase
         'ns2' => [
             'key1' => 'Key1 in ns2 message (SYSTEM)',
             'sysonly' => 'Key only in system language (SYSTEM)',
-            'rep1' => 'Replaced one {{name | replace:a:A}} at {{replaced_time | date:long:short}} (SYSTEM)',
-            'rep1_plural' => 'Replaced {{count}} {{name|replace:a:A}} at {{replaced_time | date:medium:short}} (SYSTEM)',
+            'rep1' => 'Replaced one {name | replace:a:A} at {replaced_time | date:long:short} (SYSTEM)',
+            'rep1_plural' => 'Replaced {count} {name|replace:a:A} at {replaced_time | date:medium:short} (SYSTEM)',
         ],
     ];
 
@@ -64,10 +64,10 @@ class TranslatorTest extends \PHPUnit\Framework\TestCase
             'key2_1' => 'Key2 messages (ENGLISH)',
 
             'key3' => 'Key3 has one message (ENGLISH)',
-            'key3_plural' => 'Key3 has {{count}} messages (ENGLISH)',
+            'key3_plural' => 'Key3 has {count} messages (ENGLISH)',
 
             'key3_ctx' => 'Key3 has one message in this context (ENGLISH)',
-            'key3_ctx_plural' => 'Key3 has {{count}} messages in this context (ENGLISH)',
+            'key3_ctx_plural' => 'Key3 has {count} messages in this context (ENGLISH)',
 
             'nested' => [
                 'nested1' => 'Nested message (ENGLISH)',
@@ -77,8 +77,8 @@ class TranslatorTest extends \PHPUnit\Framework\TestCase
         'ns2' => [
             'key1' => 'Key1 in ns2 message (ENGLISH)',
             //'sysonly'
-            'rep1' => 'Replaced one {{name | replace:a:A}} at {{replaced_time | date:long:short}} (ENGLISH)',
-            'rep1_plural' => 'Replaced {{count}} {{name | replace:a:A}} at {{replaced_time | date:long:short}} (ENGLISH)',
+            'rep1' => 'Replaced one {name | replace:a:A} at {replaced_time | date:long:short} (ENGLISH)',
+            'rep1_plural' => 'Replaced {count} {name | replace:a:A} at {replaced_time | date:long:short} (ENGLISH)',
         ],
     ];
 

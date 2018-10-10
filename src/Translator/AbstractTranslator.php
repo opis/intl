@@ -364,7 +364,7 @@ abstract class AbstractTranslator implements ITranslator
     protected function format(string $text, array $params, LanguageInfo $language): string
     {
         return preg_replace_callback(
-            '/\{\{\s*([a-z0-9_\-\.]+)\s*(?:\|\s*(.+?)\s*)?(?=\}\})\}\}/ui',
+            '/\{\s*([a-z0-9_\-\.]+)\s*(?:\|\s*(.+?)\s*)?(?=\})\}/ui',
             $this->getFormatFunction($language, $params),
             $text
         );
