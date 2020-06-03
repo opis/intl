@@ -15,7 +15,7 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Intl;
+namespace Opis\I18n;
 
 class IntlChecker
 {

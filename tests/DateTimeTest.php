@@ -15,23 +15,24 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Intl\Test;
+namespace Opis\I18n\Test;
 
-use Opis\Intl\DateTimeFormatter;
-use Opis\Intl\IDateTimeFormatter;
+use Opis\I18n\DefaultDateTimeFormatter;
+use Opis\I18n\DateTimeFormatter;
+use PHPUnit\Framework\TestCase;
 
-class DateTimeTest extends \PHPUnit\Framework\TestCase
+class DateTimeTest extends TestCase
 {
 
     public function testFormat()
     {
-        $d = DateTimeFormatter::create("en_US", "full", "full", null, null, "GMT");
+        $d = DefaultDateTimeFormatter::create("en_US", "full", "full", null, null, "GMT");
         $this->doTests($d);
     }
 
     public function testOptions()
     {
-        $d = DateTimeFormatter::fromArray([
+        $d = DefaultDateTimeFormatter::fromArray([
             'locale' => 'en_US',
             'date' => 'full',
             'time' => 'full',
@@ -42,7 +43,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
         $this->doTests($d);
     }
 
-    protected function doTests(IDateTimeFormatter $d)
+    protected function doTests(DateTimeFormatter $d)
     {
         $this->assertContains($d->format(0), [
             'January 1, 1970, 12:00 AM', // no intl

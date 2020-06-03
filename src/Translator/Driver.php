@@ -15,9 +15,9 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Intl\Translator;
+namespace Opis\I18n\Translator;
 
-interface IDriver
+interface Driver
 {
 
     /**

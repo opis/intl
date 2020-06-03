@@ -15,9 +15,9 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Intl\Translator\Drivers;
+namespace Opis\I18n\Translator\Drivers;
 
-class JsonFile extends AbstractFileDriver
+class JsonFile extends FileDriver
 {
     /**
      * @inheritDoc

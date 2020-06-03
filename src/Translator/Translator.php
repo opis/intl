@@ -15,40 +15,48 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Intl;
+namespace Opis\I18n\Translator;
 
-interface IDateTimeFormatter
+interface Translator
 {
-    /**
-     * @param mixed $value
-     * @param mixed $date_format
-     * @param mixed $time_format
-     * @param mixed $timezone
-     * @return string
-     */
-    public function format($value = null, $date_format = null, $time_format = null, $timezone = null);
 
     /**
-     * @param mixed $value
-     * @param string $pattern
-     * @param mixed $timezone
-     * @return string
+     * @param Driver $driver
+     * @return Translator
      */
-    public function formatPattern($value, string $pattern, $timezone = null);
+    public function setDriver(Driver $driver): self;
 
     /**
-     * @param mixed $value
-     * @param mixed $format
-     * @param mixed $timezone
-     * @return string
+     * @return Driver
      */
-    public function formatDate($value = null, $format = null, $timezone = null);
+    public function getDriver(): Driver;
 
     /**
-     * @param mixed $value
-     * @param mixed $format
-     * @param mixed $timezone
+     * @param string $language
+     * @return Translator
+     */
+    public function setDefaultLanguage(string $language): self;
+
+    /**
      * @return string
      */
-    public function formatTime($value = null, $format = null, $timezone = null);
+    public function getDefaultLanguage(): string;
+
+    /**
+     * @param string|null $language
+     * @return LanguageInfo
+     */
+    public function language(string $language = null): LanguageInfo;
+
+    /**
+     * @param string $ns
+     * @param string $key
+     * @param string|null $context
+     * @param array $params
+     * @param int $count
+     * @param null $language
+     * @return string
+     */
+    public function translate(string $ns, string $key, string $context = null, array $params = [], int $count = 1, $language = null): string;
+
 }

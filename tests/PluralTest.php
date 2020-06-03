@@ -15,32 +15,33 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Intl\Test;
+namespace Opis\I18n\Test;
 
-use Opis\Intl\Plural;
+use Opis\I18n\DefaultPlural;
+use PHPUnit\Framework\TestCase;
 
-class PluralTest extends \PHPUnit\Framework\TestCase
+class PluralTest extends TestCase
 {
 
     public function testForms()
     {
 
-        $p = Plural::create('en_US');
+        $p = DefaultPlural::create('en_US');
         $this->assertEquals(2, $p->forms());
 
-        $p = Plural::create('ro_RO');
+        $p = DefaultPlural::create('ro_RO');
         $this->assertEquals(3, $p->forms());
     }
 
     public function testRule()
     {
-        $p = Plural::create('en_US');
+        $p = DefaultPlural::create('en_US');
         $this->assertEquals(0, $p->form(1));
         $this->assertEquals(1, $p->form(0));
         $this->assertEquals(1, $p->form(2));
         $this->assertEquals(1, $p->form(-2));
 
-        $p = Plural::create('ro_RO');
+        $p = DefaultPlural::create('ro_RO');
         $this->assertEquals(0, $p->form(1));
         $this->assertEquals(1, $p->form(0));
         $this->assertEquals(1, $p->form(2));

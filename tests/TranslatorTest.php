@@ -15,17 +15,18 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Intl\Test;
+namespace Opis\I18n\Test;
 
-use Opis\Intl\Translator\AbstractTranslator;
-use Opis\Intl\Translator\Drivers\Memory;
-use Opis\Intl\Translator\IDriver;
-use Opis\Intl\Translator\IFilter;
-use Opis\Intl\Translator\ITranslator;
-use Opis\Intl\Translator\LanguageInfo;
-use Opis\Intl\Locale;
+use Opis\I18n\Translator\BaseTranslator;
+use Opis\I18n\Translator\Drivers\Memory;
+use Opis\I18n\Translator\Driver;
+use Opis\I18n\Translator\Filter;
+use Opis\I18n\Translator\Translator;
+use Opis\I18n\Translator\LanguageInfo;
+use Opis\I18n\DefaultLocale;
+use PHPUnit\Framework\TestCase;
 
-class TranslatorTest extends \PHPUnit\Framework\TestCase
+class TranslatorTest extends TestCase
 {
 
     const SYSTEM_LANG = [
@@ -89,17 +90,17 @@ class TranslatorTest extends \PHPUnit\Framework\TestCase
         ]
     ];
 
-    protected function getDriver(): IDriver
+    protected function getDriver(): Driver
     {
         return new Memory(['en_US' => self::LANG_SETTINGS], ['en_US' => self::EN_LANG]);
     }
 
-    protected function getTranslator(): ITranslator
+    protected function getTranslator(): Translator
     {
         $driver = $this->getDriver();
         $sysns = self::SYSTEM_LANG;
 
-        return new class($driver, 'en_US', $sysns) extends AbstractTranslator {
+        return new class($driver, 'en_US', $sysns) extends BaseTranslator {
 
             protected $sysns;
 
@@ -108,11 +109,11 @@ class TranslatorTest extends \PHPUnit\Framework\TestCase
             /**
              * @inheritDoc
              */
-            public function __construct(IDriver $driver, $default_language = Locale::SYSTEM_LOCALE, array $sysns)
+            public function __construct(Driver $driver, $default_language = DefaultLocale::SYSTEM_LOCALE, array $sysns)
             {
                 parent::__construct($driver, $default_language);
                 $this->sysns = $sysns;
-                $this->filters['replace'] = new class implements IFilter {
+                $this->filters['replace'] = new class implements Filter {
                     /**
                      * @inheritDoc
                      */
@@ -122,7 +123,7 @@ class TranslatorTest extends \PHPUnit\Framework\TestCase
                     }
 
                 };
-                $this->filters['date'] = new class implements IFilter {
+                $this->filters['date'] = new class implements Filter {
                     /**
                      * @inheritDoc
                      */

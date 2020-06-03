@@ -15,11 +15,11 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Intl\Translator\Drivers;
+namespace Opis\I18n\Translator\Drivers;
 
-use Opis\Intl\Translator\IDriver;
+use Opis\I18n\Translator\Driver;
 
-class Memory implements IDriver
+class Memory implements Driver
 {
 
     /** @var array */

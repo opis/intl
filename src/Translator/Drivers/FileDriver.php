@@ -15,12 +15,12 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Intl\Translator\Drivers;
+namespace Opis\I18n\Translator\Drivers;
 
 use DirectoryIterator;
-use Opis\Intl\Translator\IDriver;
+use Opis\I18n\Translator\Driver;
 
-abstract class AbstractFileDriver implements IDriver
+abstract class FileDriver implements Driver
 {
 
     /** @var int */

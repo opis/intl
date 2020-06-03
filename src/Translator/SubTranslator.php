@@ -15,7 +15,7 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Intl\Translator;
+namespace Opis\I18n\Translator;
 
 class SubTranslator
 {
@@ -32,15 +32,15 @@ class SubTranslator
     /** @var array */
     protected $params = [];
 
-    /** @var ITranslator */
+    /** @var Translator */
     protected $translator;
 
     /**
      * SubTranslator constructor.
-     * @param ITranslator $translator
+     * @param Translator $translator
      * @param string $ns
      */
-    public function __construct(ITranslator $translator, string $ns)
+    public function __construct(Translator $translator, string $ns)
     {
         $this->ns = $ns;
         $this->translator = $translator;

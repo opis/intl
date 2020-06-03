@@ -15,26 +15,26 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Intl\Translator;
+namespace Opis\I18n\Translator;
 
-use Opis\Intl\{
-    ILocale, IPlural, IDateTimeFormatter, INumberFormatter,
-    Locale, Plural, DateTimeFormatter, NumberFormatter
+use Opis\I18n\{
+    Locale, Plural, DateTimeFormatter, NumberFormatter,
+    DefaultLocale, DefaultPlural, DefaultDateTimeFormatter, DefaultNumberFormatter
 };
 
 class LanguageInfo
 {
 
-    /** @var ILocale */
+    /** @var Locale */
     protected $locale;
 
-    /** @var IPlural */
+    /** @var Plural */
     protected $plural;
 
-    /** @var IDateTimeFormatter */
+    /** @var DateTimeFormatter */
     protected $datetime;
 
-    /** @var INumberFormatter */
+    /** @var NumberFormatter */
     protected $number;
 
     /** @var string[] */
@@ -42,13 +42,13 @@ class LanguageInfo
 
     /**
      * LanguageInfo constructor.
-     * @param ILocale $locale
-     * @param IPlural $plural
-     * @param IDateTimeFormatter $date
-     * @param INumberFormatter $number
+     * @param Locale $locale
+     * @param Plural $plural
+     * @param DateTimeFormatter $date
+     * @param NumberFormatter $number
      * @param array $fallback
      */
-    public function __construct(ILocale $locale, IPlural $plural, IDateTimeFormatter $date, INumberFormatter $number, array $fallback = [])
+    public function __construct(Locale $locale, Plural $plural, DateTimeFormatter $date, NumberFormatter $number, array $fallback = [])
     {
         $this->locale = $locale;
         $this->plural = $plural;
@@ -58,33 +58,33 @@ class LanguageInfo
     }
 
     /**
-     * @return ILocale
+     * @return Locale
      */
-    public function locale(): ILocale
+    public function locale(): Locale
     {
         return $this->locale;
     }
 
     /**
-     * @return IPlural
+     * @return Plural
      */
-    public function plural(): IPlural
+    public function plural(): Plural
     {
         return $this->plural;
     }
 
     /**
-     * @return IDateTimeFormatter
+     * @return DateTimeFormatter
      */
-    public function datetime(): IDateTimeFormatter
+    public function datetime(): DateTimeFormatter
     {
         return $this->datetime;
     }
 
     /**
-     * @return INumberFormatter
+     * @return NumberFormatter
      */
-    public function number(): INumberFormatter
+    public function number(): NumberFormatter
     {
         return $this->number;
     }
@@ -113,10 +113,10 @@ class LanguageInfo
     }
 
     /**
-     * @param ILocale|array|string|null $locale
-     * @param IPlural|array|null $plural
-     * @param IDateTimeFormatter|array|null $datetime
-     * @param INumberFormatter|array|null $number
+     * @param Locale|array|string|null $locale
+     * @param Plural|array|null $plural
+     * @param DateTimeFormatter|array|null $datetime
+     * @param NumberFormatter|array|null $number
      * @param string[] $fallback
      * @return LanguageInfo
      */
@@ -131,83 +131,83 @@ class LanguageInfo
     }
 
     /**
-     * @param ILocale|array|string|null $locale
-     * @return ILocale
+     * @param Locale|array|string|null $locale
+     * @return Locale
      */
-    public static function parseLocale($locale): ILocale
+    public static function parseLocale($locale): Locale
     {
-        if ($locale instanceof ILocale) {
+        if ($locale instanceof Locale) {
             return $locale;
         }
         if (is_array($locale)) {
-            return Locale::fromArray($locale);
+            return DefaultLocale::fromArray($locale);
         }
 
         if (!is_string($locale)) {
-            $locale = ILocale::SYSTEM_LOCALE;
+            $locale = Locale::SYSTEM_LOCALE;
         }
 
-        return Locale::create($locale);
+        return DefaultLocale::create($locale);
     }
 
     /**
-     * @param IPlural|array|string|null $plural
-     * @param ILocale|string|array|null $locale
-     * @return IPlural
+     * @param Plural|array|string|null $plural
+     * @param Locale|string|array|null $locale
+     * @return Plural
      */
-    public static function parsePlural($plural, $locale = null): IPlural
+    public static function parsePlural($plural, $locale = null): Plural
     {
-        if ($plural instanceof IPlural) {
+        if ($plural instanceof Plural) {
             return $plural;
         }
 
         if (is_array($plural)) {
-            return Plural::fromArray($plural);
+            return DefaultPlural::fromArray($plural);
         }
 
         $locale = static::parseLocale(is_string($plural) ? $plural : $locale);
 
-        return Plural::create($locale->id());
+        return DefaultPlural::create($locale->id());
     }
 
     /**
-     * @param IDateTimeFormatter|array|null $datetime
-     * @param ILocale|string|array|null $locale
-     * @return IDateTimeFormatter
+     * @param DateTimeFormatter|array|null $datetime
+     * @param Locale|string|array|null $locale
+     * @return DateTimeFormatter
      */
-    public static function parseDateTime($datetime, $locale = null): IDateTimeFormatter
+    public static function parseDateTime($datetime, $locale = null): DateTimeFormatter
     {
-        if ($datetime instanceof IDateTimeFormatter) {
+        if ($datetime instanceof DateTimeFormatter) {
             return $datetime;
         }
 
         $locale = static::parseLocale(is_string($datetime) ? $datetime : $locale);
 
         if (is_array($datetime)) {
-            return DateTimeFormatter::fromArray($datetime, $locale->id());
+            return DefaultDateTimeFormatter::fromArray($datetime, $locale->id());
         }
 
-        return DateTimeFormatter::create($locale->id());
+        return DefaultDateTimeFormatter::create($locale->id());
     }
 
     /**
-     * @param INumberFormatter|array|null $number
-     * @param ILocale|string|array|null $locale
-     * @return INumberFormatter
+     * @param NumberFormatter|array|null $number
+     * @param Locale|string|array|null $locale
+     * @return NumberFormatter
      */
-    public static function parseNumber($number, $locale = null): INumberFormatter
+    public static function parseNumber($number, $locale = null): NumberFormatter
     {
-        if ($number instanceof INumberFormatter) {
+        if ($number instanceof NumberFormatter) {
             return $number;
         }
 
         $locale = static::parseLocale(is_string($number) ? $number : $locale);
 
         if (is_array($number)) {
-            return NumberFormatter::fromArray($number, $locale->id());
+            return DefaultNumberFormatter::fromArray($number, $locale->id());
         }
 
-        return NumberFormatter::create($locale->id());
+        return DefaultNumberFormatter::create($locale->id());
     }
 
 }

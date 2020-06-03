@@ -15,20 +15,21 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Intl\Test;
+namespace Opis\I18n\Test;
 
-use Opis\Intl\{
-    IntlChecker, NumberFormatter
+use Opis\I18n\{
+    IntlChecker, DefaultNumberFormatter
 };
+use PHPUnit\Framework\TestCase;
 
-class NumberTest extends \PHPUnit\Framework\TestCase
+class NumberTest extends TestCase
 {
 
     const NUMBER = 987612345.06789;
 
     public function testFormat()
     {
-        $n = NumberFormatter::create('en_US');
+        $n = DefaultNumberFormatter::create('en_US');
 
         $this->assertEquals('987,612,345.068', $n->formatDecimal(self::NUMBER));
         $this->assertEquals('$987,612,345.07', $n->formatCurrency(self::NUMBER));
@@ -39,7 +40,7 @@ class NumberTest extends \PHPUnit\Framework\TestCase
 
     public function testOptions()
     {
-        $n = NumberFormatter::fromArray([
+        $n = DefaultNumberFormatter::fromArray([
             'locale' => 'en_US',
             'decimal' => [
                 'rounding_mode' => 'down',

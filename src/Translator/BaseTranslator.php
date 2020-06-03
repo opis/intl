@@ -15,12 +15,12 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Intl\Translator;
+namespace Opis\I18n\Translator;
 
 use Closure;
-use Opis\Intl\ILocale;
+use Opis\I18n\Locale;
 
-abstract class AbstractTranslator implements ITranslator
+abstract class BaseTranslator implements Translator
 {
     /** @var LanguageInfo[] */
     protected $languages = null;
@@ -31,7 +31,7 @@ abstract class AbstractTranslator implements ITranslator
     /** @var LanguageInfo[] */
     protected $localeLanguages = [];
 
-    /** @var IDriver */
+    /** @var Driver */
     protected $driver;
 
     /** @var array */
@@ -39,10 +39,10 @@ abstract class AbstractTranslator implements ITranslator
 
     /**
      * Translator constructor.
-     * @param IDriver $driver
+     * @param Driver $driver
      * @param string $default_language
      */
-    public function __construct(IDriver $driver, string $default_language = ILocale::SYSTEM_LOCALE)
+    public function __construct(Driver $driver, string $default_language = Locale::SYSTEM_LOCALE)
     {
         // Accept from http
         $this->defaultLanguage = $default_language;
@@ -52,7 +52,7 @@ abstract class AbstractTranslator implements ITranslator
     /**
      * @inheritDoc
      */
-    public function setDefaultLanguage(string $language): ITranslator
+    public function setDefaultLanguage(string $language): Translator
     {
         $this->defaultLanguage = $language;
 
@@ -70,7 +70,7 @@ abstract class AbstractTranslator implements ITranslator
     /**
      * @inheritDoc
      */
-    public function setDriver(IDriver $driver): ITranslator
+    public function setDriver(Driver $driver): Translator
     {
         if ($this->driver !== $driver) {
             $this->cache = null;
@@ -84,7 +84,7 @@ abstract class AbstractTranslator implements ITranslator
     /**
      * @inheritDoc
      */
-    public function getDriver(): IDriver
+    public function getDriver(): Driver
     {
         return $this->driver;
     }
@@ -186,11 +186,11 @@ abstract class AbstractTranslator implements ITranslator
         if (strpos($key, ':') === false) {
             return $key;
         }
-        list($ns, $key) = explode(':', $key, 2);
+        [$ns, $key] = explode(':', $key, 2);
         if (strpos($key, '_') === false) {
             $context = null;
         } else {
-            list($key, $context) = explode('_', $key, 2);
+            [$key, $context] = explode('_', $key, 2);
         }
 
         return $this->translate($ns, $key, $context, $params, $count, $language);
@@ -205,7 +205,7 @@ abstract class AbstractTranslator implements ITranslator
             return;
         }
         $this->languages = [];
-        $this->languages[ILocale::SYSTEM_LOCALE] = null;
+        $this->languages[Locale::SYSTEM_LOCALE] = null;
         foreach ($this->getDriver()->listLanguages() as $lang) {
             $this->languages[$lang] = null;
         }
@@ -220,10 +220,10 @@ abstract class AbstractTranslator implements ITranslator
     {
         $this->preloadAvailableLanguages();
         if (!array_key_exists($language, $this->languages)) {
-            $language = ILocale::SYSTEM_LOCALE;
+            $language = Locale::SYSTEM_LOCALE;
         }
         if (!isset($this->cache[$language][$ns])) {
-            if ($language === ILocale::SYSTEM_LOCALE) {
+            if ($language === Locale::SYSTEM_LOCALE) {
                 $this->cache[$language][$ns] = $this->loadSystemNS($ns);
             } else {
                 $this->cache[$language][$ns] = $this->getDriver()->loadNS($language, $ns);
@@ -264,7 +264,7 @@ abstract class AbstractTranslator implements ITranslator
 
         $languages = $language->fallback();
         array_unshift($languages, $language->locale()->id());
-        $languages[] = ILocale::SYSTEM_LOCALE;
+        $languages[] = Locale::SYSTEM_LOCALE;
         $languages = array_unique($languages);
 
         $path = explode('.', $key);
@@ -417,7 +417,7 @@ abstract class AbstractTranslator implements ITranslator
                     continue;
                 }
                 $filter = $this->getFilter($filter);
-                if (!($filter instanceof IFilter)) {
+                if (!($filter instanceof Filter)) {
                     continue;
                 }
                 $value = $filter->apply($value, $args, $language);
@@ -436,7 +436,7 @@ abstract class AbstractTranslator implements ITranslator
 
     /**
      * @param string $name
-     * @return IFilter|null
+     * @return Filter|null
      */
     abstract protected function getFilter(string $name);
 }

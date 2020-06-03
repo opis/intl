@@ -15,26 +15,15 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Intl;
+namespace Opis\I18n\Translator;
 
-interface INumberFormatter
+interface Filter
 {
     /**
-     * @param int|float|string $value
-     * @return string
+     * @param $value
+     * @param array $args
+     * @param LanguageInfo $language
+     * @return mixed
      */
-    public function formatDecimal($value): string;
-
-    /**
-     * @param int|float|string $value
-     * @return string
-     */
-    public function formatPercent($value): string;
-
-    /**
-     * @param int|float|string $value
-     * @param string|null $currency
-     * @return string
-     */
-    public function formatCurrency($value, string $currency = null): string;
+    public function apply($value, array $args, LanguageInfo $language);
 }

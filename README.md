@@ -11,35 +11,32 @@ Internationalization library
 
 ### License
 
-**Opis Intl** is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+**Opis Intl** is licensed under the [Apache License, Version 2.0][license].
 
 ### Requirements
 
-* PHP 7.0 or higher
-* intl extension (recommended)
+* PHP ^7.4
+* ext-intl
 
-### Installation
+## Installation
 
-This library is available on [Packagist](https://packagist.org/packages/opis/intl) and can be installed using [Composer](http://getcomposer.org).
+**Opis Events** is available on [Packagist] and it can be installed from a 
+command line interface by using [Composer]. 
+
+```bash
+composer require opis/intl
+```
+
+Or you could directly reference it into your `composer.json` file as a dependency
 
 ```json
 {
     "require": {
-        "opis/intl": "1.0.x-dev"
+        "opis/intl": "^2020"
     }
 }
 ```
 
-If you are unable to use [Composer](http://getcomposer.org) you can download the
-[tar.gz](https://github.com/opis/intl/archive/master.tar.gz) or the [zip](https://github.com/opis/intl/archive/master.zip)
-archive file, extract the content of the archive and include de `autoload.php` file into your project.
-
-```php
-
-require_once 'path/to/intl-master/autoload.php';
-
-```
-
-### Documentation
-
-Examples and documentation can be found [here](https://www.opis.io/intl).
+[license]: https://www.apache.org/licenses/LICENSE-2.0 "Apache License"
+[Packagist]: https://packagist.org/packages/opis/events "Packagist"
+[Composer]: https://getcomposer.org "Composer"
