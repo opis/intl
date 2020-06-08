@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ interface DateTimeFormatter
      * @param mixed $date_format
      * @param mixed $time_format
      * @param mixed $timezone
-     * @return string
+     * @return string|null
      */
-    public function format($value = null, $date_format = null, $time_format = null, $timezone = null);
+    public function format($value = null, $date_format = null, $time_format = null, $timezone = null): ?string;
 
     /**
      * @param mixed $value
@@ -34,7 +34,7 @@ interface DateTimeFormatter
      * @param mixed $timezone
      * @return string
      */
-    public function formatPattern($value, string $pattern, $timezone = null);
+    public function formatPattern($value, string $pattern, $timezone = null): ?string;
 
     /**
      * @param mixed $value
@@ -42,7 +42,7 @@ interface DateTimeFormatter
      * @param mixed $timezone
      * @return string
      */
-    public function formatDate($value = null, $format = null, $timezone = null);
+    public function formatDate($value = null, $format = null, $timezone = null): ?string;
 
     /**
      * @param mixed $value
@@ -50,5 +50,5 @@ interface DateTimeFormatter
      * @param mixed $timezone
      * @return string
      */
-    public function formatTime($value = null, $format = null, $timezone = null);
+    public function formatTime($value = null, $format = null, $timezone = null): ?string;
 }

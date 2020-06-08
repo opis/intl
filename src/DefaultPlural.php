@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,22 +22,19 @@ use Closure;
 class DefaultPlural implements Plural
 {
 
-    /** @var int */
-    protected $forms;
+    protected int $forms;
 
-    /** @var string */
-    protected $rule;
+    protected string $rule;
 
     /** @var callable|null */
     protected $func;
 
     /**
-     * RulePlural constructor.
      * @param int $forms
      * @param string $rule
      * @param callable|null $func
      */
-    public function __construct(int $forms, string $rule, callable $func = null)
+    public function __construct(int $forms, string $rule, ?callable $func = null)
     {
         $this->forms = $forms;
         $this->rule = $rule;
@@ -82,9 +79,9 @@ class DefaultPlural implements Plural
     /**
      * @param string $rule
      * @param int $forms
-     * @return Closure
+     * @return callable
      */
-    protected function parseRule(string $rule, int $forms = 2): Closure
+    protected function parseRule(string $rule, int $forms = 2): callable
     {
         if (!static::ruleIsValid($rule)) {
             $rule = null;
@@ -193,7 +190,7 @@ class DefaultPlural implements Plural
         foreach ($files as $file) {
             $file = $dir . DIRECTORY_SEPARATOR . $file . '.php';
 
-            if (file_exists($file)) {
+            if (is_file($file)) {
                 /** @noinspection PhpIncludeInspection */
                 $file = include($file);
                 if (!is_array($file)) {

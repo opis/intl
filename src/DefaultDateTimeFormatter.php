@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,14 +27,14 @@ use IntlDateFormatter,
 
 class DefaultDateTimeFormatter implements DateTimeFormatter
 {
-    /** @var IntlDateFormatter|null */
-    protected $formatter;
+
+    protected ?IntlDateFormatter $formatter;
 
     /**
      * DateTimeFormatter constructor.
      * @param IntlDateFormatter $formatter
      */
-    public function __construct(IntlDateFormatter $formatter = null)
+    public function __construct(?IntlDateFormatter $formatter = null)
     {
         $this->formatter = $formatter;
     }
@@ -42,7 +42,7 @@ class DefaultDateTimeFormatter implements DateTimeFormatter
     /**
      * @return IntlDateFormatter|null
      */
-    public function formatter()
+    public function formatter(): ?IntlDateFormatter
     {
         return $this->formatter;
     }
@@ -50,7 +50,7 @@ class DefaultDateTimeFormatter implements DateTimeFormatter
     /**
      * @return IntlCalendar|null
      */
-    public function calendar()
+    public function calendar(): ?IntlCalendar
     {
         if ($this->formatter === null) {
             return null;
@@ -61,7 +61,7 @@ class DefaultDateTimeFormatter implements DateTimeFormatter
     /**
      * @return IntlTimeZone|null
      */
-    public function timezone()
+    public function timezone(): ?IntlTimeZone
     {
         if ($this->formatter === null) {
             return null;
@@ -139,13 +139,14 @@ class DefaultDateTimeFormatter implements DateTimeFormatter
      * @param int|string|null $date_format
      * @param int|string|null $time_format
      * @param string|DateTimeZone|IntlTimeZone|null $timezone
-     * @return string
+     * @return string|null
      */
-    public function format($value = null, $date_format = null, $time_format = null, $timezone = null)
+    public function format($value = null, $date_format = null, $time_format = null, $timezone = null): ?string
     {
         if ($timezone === true || $timezone === 'default') {
             $timezone = date_default_timezone_get();
         }
+
         $value = $this->parseValue($value, $timezone);
         if ($this->formatter === null) {
             if ($date_format !== false) {
@@ -173,37 +174,17 @@ class DefaultDateTimeFormatter implements DateTimeFormatter
             static::getFormat($time_format, $this->formatter->getTimeType()),
         ];
 
-        // There is a bug in php-intl fixed in php 7.1
-        // https://bugs.php.net/bug.php?id=69398
-        if ($format[1] === IntlDateFormatter::NONE && substr(PHP_VERSION, 0, 3) == '7.0') {
-            $locale = $this->formatter->getLocale(IntlLocale::VALID_LOCALE);
-            $calendar = strtoupper($this->formatter->getCalendarObject()->getType());
-            $locale .= '@calendar=' . $calendar;
-            if (!$calendar || $calendar == 'GREGORIAN') {
-                $calendar = IntlDateFormatter::GREGORIAN;
-            }
-            else {
-                $calendar = IntlDateFormatter::TRADITIONAL;
-            }
-            return (new IntlDateFormatter(
-                $locale,
-                $format[0],
-                $format[1],
-                $this->formatter->getTimeZone(),
-                $calendar
-            ))->format($value);
-        }
-
-        return IntlDateFormatter::formatObject($value, $format, $this->formatter->getLocale(IntlLocale::VALID_LOCALE));
+        return IntlDateFormatter::formatObject($value, $format,
+            $this->formatter->getLocale(IntlLocale::VALID_LOCALE)) ?: null;
     }
 
     /**
      * @param int|string|DateTimeInterface|IntlCalendar|null $value
      * @param string $pattern
      * @param string|DateTimeZone|IntlTimeZone|null $timezone
-     * @return string
+     * @return string|null
      */
-    public function formatPattern($value, string $pattern, $timezone = null)
+    public function formatPattern($value, string $pattern, $timezone = null): ?string
     {
         if ($timezone === true || $timezone === 'default') {
             $timezone = date_default_timezone_get();
@@ -214,16 +195,17 @@ class DefaultDateTimeFormatter implements DateTimeFormatter
             return $value->format(DateTimeInterface::ATOM);
         }
 
-        return $this->formatter->formatObject($value, $pattern, $this->formatter->getLocale(IntlLocale::VALID_LOCALE));
+        return $this->formatter->formatObject($value, $pattern,
+            $this->formatter->getLocale(IntlLocale::VALID_LOCALE)) ?: null;
     }
 
     /**
      * @param int|string|DateTimeInterface|IntlCalendar|null $value
      * @param int|string|null $format
      * @param string|DateTimeZone|IntlTimeZone|null $timezone
-     * @return string
+     * @return string|null
      */
-    public function formatDate($value = null, $format = null, $timezone = null)
+    public function formatDate($value = null, $format = null, $timezone = null): ?string
     {
         if (is_string($format) && $this->formatter) {
             if (-100 !== $f = static::getFormat($format, -100)) {
@@ -243,7 +225,7 @@ class DefaultDateTimeFormatter implements DateTimeFormatter
      * @param string|DateTimeZone|IntlTimeZone|null $timezone
      * @return string
      */
-    public function formatTime($value = null, $format = null, $timezone = null)
+    public function formatTime($value = null, $format = null, $timezone = null): ?string
     {
         if ($this->formatter && is_string($format)) {
             if (-100 !== $f = static::getFormat($format, -100)) {
@@ -295,10 +277,11 @@ class DefaultDateTimeFormatter implements DateTimeFormatter
      * @param string|null $time
      * @param string|null $pattern
      * @param string|null|IntlCalendar $calendar
-     * @param string|DateTimeZone|IntlTimeZone null $timezone
+     * @param string|DateTimeZone|IntlTimeZone|null $timezone
      * @return DefaultDateTimeFormatter
      */
-    public static function create(string $locale, string $date = null, string $time = null, string $pattern = null, $calendar = null, $timezone = null): self
+    public static function create(string $locale, ?string $date = null, ?string $time = null,
+                                  ?string $pattern = null, $calendar = null, $timezone = null): self
     {
         if (!IntlChecker::extensionExists()) {
             return new static();

@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ interface Driver
      * @param string $language
      * @return array|null
      */
-    public function loadLanguage(string $language);
+    public function loadLanguage(string $language): ?array;
 
     /**
      * Sets language settings
@@ -39,7 +39,7 @@ interface Driver
      * @param array|null $settings
      * @return bool
      */
-    public function saveLanguage(string $language, array $settings = null): bool;
+    public function saveLanguage(string $language, ?array $settings = null): bool;
 
     /**
      * @param string $language
@@ -53,7 +53,7 @@ interface Driver
      * @param string $ns
      * @return array|null
      */
-    public function loadNS(string $language, string $ns);
+    public function loadNS(string $language, string $ns): ?array;
 
     /**
      * @param string $language
@@ -61,6 +61,6 @@ interface Driver
      * @param array|null $keys
      * @return bool
      */
-    public function saveNS(string $language, string $ns, array $keys = null): bool;
+    public function saveNS(string $language, string $ns, ?array $keys = null): bool;
 
 }

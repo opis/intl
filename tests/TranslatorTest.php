@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,7 @@
 
 namespace Opis\I18n\Test;
 
-use Opis\I18n\Translator\BaseTranslator;
-use Opis\I18n\Translator\Drivers\Memory;
-use Opis\I18n\Translator\Driver;
-use Opis\I18n\Translator\Filter;
-use Opis\I18n\Translator\Translator;
-use Opis\I18n\Translator\LanguageInfo;
+use Opis\I18n\Translator\{BaseTranslator, Drivers\Memory, Driver, Filter, Translator, LanguageInfo};
 use Opis\I18n\DefaultLocale;
 use PHPUnit\Framework\TestCase;
 
@@ -100,18 +95,19 @@ class TranslatorTest extends TestCase
         $driver = $this->getDriver();
         $sysns = self::SYSTEM_LANG;
 
-        return new class($driver, 'en_US', $sysns) extends BaseTranslator {
+        return new class($driver, $sysns, 'en_US') extends BaseTranslator {
 
-            protected $sysns;
+            protected array $sysns;
 
-            protected $filters = [];
+            protected array $filters = [];
 
             /**
              * @inheritDoc
              */
-            public function __construct(Driver $driver, $default_language = DefaultLocale::SYSTEM_LOCALE, array $sysns)
+            public function __construct(Driver $driver, array $sysns, string $default_language)
             {
                 parent::__construct($driver, $default_language);
+
                 $this->sysns = $sysns;
                 $this->filters['replace'] = new class implements Filter {
                     /**
@@ -138,7 +134,7 @@ class TranslatorTest extends TestCase
             /**
              * @inheritDoc
              */
-            protected function loadSystemNS(string $ns)
+            protected function loadSystemNS(string $ns): ?array
             {
                 return $this->sysns[$ns] ?? null;
             }
@@ -146,7 +142,7 @@ class TranslatorTest extends TestCase
             /**
              * @inheritDoc
              */
-            protected function getFilter(string $name)
+            protected function getFilter(string $name): ?Filter
             {
                 return $this->filters[$name] ?? null;
             }

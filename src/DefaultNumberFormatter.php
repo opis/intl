@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,12 @@ use NumberFormatter as IntlNumberFormatter;
 
 class DefaultNumberFormatter implements NumberFormatter
 {
-    /** @var IntlNumberFormatter|null */
-    protected $decimal;
 
-    /** @var IntlNumberFormatter|null */
-    protected $currency;
+    protected ?IntlNumberFormatter $decimal = null;
 
-    /** @var IntlNumberFormatter|null */
-    protected $percent;
+    protected ?IntlNumberFormatter $currency = null;
+
+    protected ?IntlNumberFormatter $percent = null;
 
     /**
      * NumberFormatter constructor.
@@ -36,7 +34,9 @@ class DefaultNumberFormatter implements NumberFormatter
      * @param IntlNumberFormatter|null $currency
      * @param IntlNumberFormatter|null $percent
      */
-    public function __construct(IntlNumberFormatter $decimal = null, IntlNumberFormatter $currency = null, IntlNumberFormatter $percent = null)
+    public function __construct(?IntlNumberFormatter $decimal = null,
+                                ?IntlNumberFormatter $currency = null,
+                                ?IntlNumberFormatter $percent = null)
     {
         $this->decimal = $decimal;
         $this->currency = $currency;
@@ -46,7 +46,7 @@ class DefaultNumberFormatter implements NumberFormatter
     /**
      * @return IntlNumberFormatter|null
      */
-    public function decimal()
+    public function decimal(): ?IntlNumberFormatter
     {
         return $this->decimal;
     }
@@ -54,7 +54,7 @@ class DefaultNumberFormatter implements NumberFormatter
     /**
      * @return IntlNumberFormatter|null
      */
-    public function currency()
+    public function currency(): ?IntlNumberFormatter
     {
         return $this->currency;
     }
@@ -62,7 +62,7 @@ class DefaultNumberFormatter implements NumberFormatter
     /**
      * @return IntlNumberFormatter|null
      */
-    public function percent()
+    public function percent(): ?IntlNumberFormatter
     {
         return $this->percent;
     }
@@ -94,7 +94,7 @@ class DefaultNumberFormatter implements NumberFormatter
     /**
      * @inheritdoc
      */
-    public function formatCurrency($value, string $currency = null): string
+    public function formatCurrency($value, ?string $currency = null): string
     {
         if ($this->currency === null) {
             $map = [

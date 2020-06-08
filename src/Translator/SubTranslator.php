@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,20 +20,15 @@ namespace Opis\I18n\Translator;
 class SubTranslator
 {
 
-    /** @var string */
-    protected $ns;
+    protected string $ns;
 
-    /** @var int */
-    protected $count = 1;
+    protected Translator $translator;
 
-    /** @var string|null */
-    protected $context = null;
+    protected int $count = 1;
 
-    /** @var array */
-    protected $params = [];
+    protected ?string $context = null;
 
-    /** @var Translator */
-    protected $translator;
+    protected array $params = [];
 
     /**
      * SubTranslator constructor.
@@ -73,7 +68,7 @@ class SubTranslator
      * @param string|null $context
      * @return SubTranslator
      */
-    public function context(string $context = null): self
+    public function context(?string $context = null): self
     {
         $this->context = $context;
 
@@ -113,10 +108,10 @@ class SubTranslator
      * @param array|null $params
      * @param int $count
      * @param string|null $context
-     * @param null $lang
+     * @param string|null|LanguageInfo $lang
      * @return string
      */
-    public function t(string $key, string $context = null, array $params = null, int $count = 1, $lang = null)
+    public function t(string $key, ?string $context = null, ?array $params = null, int $count = 1, $lang = null)
     {
         $this->params = $params ?? [];
         $this->count = $count;

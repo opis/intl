@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,37 +22,34 @@ use Opis\I18n\Locale;
 
 abstract class BaseTranslator implements Translator
 {
+    protected string $defaultLanguage;
+
+    protected Driver $driver;
+
+    /** @var LanguageInfo[]|null */
+    protected ?array $languages = null;
+
     /** @var LanguageInfo[] */
-    protected $languages = null;
+    protected array $localeLanguages = [];
 
-    /** @var string */
-    protected $defaultLanguage;
-
-    /** @var LanguageInfo[] */
-    protected $localeLanguages = [];
-
-    /** @var Driver */
-    protected $driver;
-
-    /** @var array */
-    protected $cache = [];
+    protected ?array $cache = null;
 
     /**
      * Translator constructor.
      * @param Driver $driver
-     * @param string $default_language
+     * @param string|null $default_language
      */
-    public function __construct(Driver $driver, string $default_language = Locale::SYSTEM_LOCALE)
+    public function __construct(Driver $driver, ?string $default_language = null)
     {
         // Accept from http
-        $this->defaultLanguage = $default_language;
+        $this->defaultLanguage = $default_language ?? Locale::SYSTEM_LOCALE;
         $this->driver = $driver;
     }
 
     /**
      * @inheritDoc
      */
-    public function setDefaultLanguage(string $language): Translator
+    public function setDefaultLanguage(string $language): self
     {
         $this->defaultLanguage = $language;
 
@@ -70,7 +67,7 @@ abstract class BaseTranslator implements Translator
     /**
      * @inheritDoc
      */
-    public function setDriver(Driver $driver): Translator
+    public function setDriver(Driver $driver): self
     {
         if ($this->driver !== $driver) {
             $this->cache = null;
@@ -93,7 +90,7 @@ abstract class BaseTranslator implements Translator
      * @param string|null $language
      * @return LanguageInfo
      */
-    public function language(string $language = null): LanguageInfo
+    public function language(?string $language = null): LanguageInfo
     {
 
         // Get default language
@@ -181,7 +178,7 @@ abstract class BaseTranslator implements Translator
      * @param string|null|LanguageInfo $language
      * @return string
      */
-    public function translateKey(string $key, array $params = [], int $count = 1, $language = null)
+    public function translateKey(string $key, array $params = [], int $count = 1, $language = null): string
     {
         if (strpos($key, ':') === false) {
             return $key;
@@ -199,7 +196,7 @@ abstract class BaseTranslator implements Translator
     /**
      * Pre-loads language array
      */
-    protected function preloadAvailableLanguages()
+    protected function preloadAvailableLanguages(): void
     {
         if ($this->languages !== null) {
             return;
@@ -216,7 +213,7 @@ abstract class BaseTranslator implements Translator
      * @param string $ns
      * @return array|null
      */
-    protected function loadNS(string $language, string $ns)
+    protected function loadNS(string $language, string $ns): ?array
     {
         $this->preloadAvailableLanguages();
         if (!array_key_exists($language, $this->languages)) {
@@ -257,7 +254,7 @@ abstract class BaseTranslator implements Translator
      * @param int $count
      * @return null|string
      */
-    protected function getTranslationText(LanguageInfo $language, string $ns, string $key, string $context = null, int $count = 1)
+    protected function getTranslationText(LanguageInfo $language, string $ns, string $key, ?string $context = null, int $count = 1)
     {
         $this->preloadAvailableLanguages();
         $plural_form = $language->plural()->form($count);
@@ -306,7 +303,8 @@ abstract class BaseTranslator implements Translator
      * @param int $plural_form
      * @return null|string
      */
-    protected function getTranslationDataWithContext(array &$data, string $key, string $context = null, int $plural_form = 0)
+    protected function getTranslationDataWithContext(array &$data, string $key,
+                                                     ?string $context = null, int $plural_form = 0): ?string
     {
         // Check context
         if ($context !== null && $context !== '') {
@@ -328,7 +326,7 @@ abstract class BaseTranslator implements Translator
      * @param int $plural_form
      * @return null|string
      */
-    protected function getTranslationData(array &$data, string $key, int $plural_form)
+    protected function getTranslationData(array &$data, string $key, int $plural_form): ?string
     {
 
         // Exact plural
@@ -373,9 +371,9 @@ abstract class BaseTranslator implements Translator
     /**
      * @param LanguageInfo $language
      * @param array $params
-     * @return Closure
+     * @return callable
      */
-    protected function getFormatFunction(LanguageInfo $language, array $params): Closure
+    protected function getFormatFunction(LanguageInfo $language, array $params): callable
     {
         return function (array $m) use ($language, &$params) {
             $path = explode('.', $m[1]);
@@ -432,11 +430,11 @@ abstract class BaseTranslator implements Translator
      * @param string $ns
      * @return null|array
      */
-    abstract protected function loadSystemNS(string $ns);
+    abstract protected function loadSystemNS(string $ns): ?array;
 
     /**
      * @param string $name
      * @return Filter|null
      */
-    abstract protected function getFilter(string $name);
+    abstract protected function getFilter(string $name): ?Filter;
 }

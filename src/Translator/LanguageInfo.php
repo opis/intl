@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,20 +25,16 @@ use Opis\I18n\{
 class LanguageInfo
 {
 
-    /** @var Locale */
-    protected $locale;
+    protected Locale $locale;
 
-    /** @var Plural */
-    protected $plural;
+    protected Plural $plural;
 
-    /** @var DateTimeFormatter */
-    protected $datetime;
+    protected DateTimeFormatter $datetime;
 
-    /** @var NumberFormatter */
-    protected $number;
+    protected NumberFormatter $number;
 
     /** @var string[] */
-    protected $fallback;
+    protected array $fallback;
 
     /**
      * LanguageInfo constructor.

@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@ use Locale as IntlLocale,
 
 class DefaultLocale implements Locale
 {
-    /** @var bool */
-    protected static $useIntl = false;
 
     /** Regex for locale parsing */
     const LOCALE_REGEX = '~^
@@ -47,30 +45,25 @@ $~x';
         'Adlm',
     ];
 
-    /** @var string */
-    protected $id;
+    protected string $id;
 
-    /** @var string */
-    protected $language;
+    protected string $language;
 
-    /** @var null|string */
-    protected $script;
+    protected ?string $script = null;
 
-    /** @var null|string */
-    protected $region;
+    protected ?string $region = null;
 
-    /** @var bool */
-    protected $rtl;
+    protected bool $rtl = false;
 
     /**
-     * Locale constructor.
      * @param string $id Canonical name
      * @param string $language Two letters code
      * @param string|null $script Script name ISO 15924
      * @param string|null $region Two letters code
      * @param bool $rtl
      */
-    public function __construct(string $id, string $language, string $script = null, string $region = null, bool $rtl = false)
+    public function __construct(string $id, string $language,
+                                ?string $script = null, ?string $region = null, bool $rtl = false)
     {
         $this->id = $id;
         $this->language = $language;
@@ -98,7 +91,7 @@ $~x';
     /**
      * @inheritdoc
      */
-    public function script()
+    public function script(): ?string
     {
         return $this->script;
     }
@@ -106,7 +99,7 @@ $~x';
     /**
      * @inheritdoc
      */
-    public function region()
+    public function region(): ?string
     {
         return $this->region;
     }
@@ -163,9 +156,7 @@ $~x';
         }
 
         $name = self::canonicalize($name);
-        $locale = array_filter($locale, function ($value) {
-            return $value !== null;
-        });
+        $locale = array_filter($locale, static fn ($value) => $value !== null);
         $locale += self::parse($name);
 
         return new self(
@@ -182,7 +173,7 @@ $~x';
      * @param string|null $script
      * @return bool
      */
-    public static function isScriptRTL(string $script = null): bool
+    public static function isScriptRTL(?string $script = null): bool
     {
         if ($script === null || $script === '') {
             return false;
@@ -307,7 +298,7 @@ $~x';
      * @param string|null $in_language
      * @return string
      */
-    public static function getDisplayLanguage(string $locale, string $in_language = null): string
+    public static function getDisplayLanguage(string $locale, ?string $in_language = null): string
     {
         if (IntlChecker::extensionExists()) {
             return IntlLocale::getDisplayLanguage($locale, $in_language ?? self::SYSTEM_LOCALE);
@@ -321,7 +312,7 @@ $~x';
      * @param string|null $in_language
      * @return string
      */
-    public static function getDisplayName(string $locale, string $in_language = null): string
+    public static function getDisplayName(string $locale, ?string $in_language = null): string
     {
         if (IntlChecker::extensionExists()) {
             return IntlLocale::getDisplayName($locale, $in_language ?? self::SYSTEM_LOCALE);

@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,19 +21,15 @@ use Opis\I18n\Translator\Driver;
 
 class Memory implements Driver
 {
-
-    /** @var array */
-    protected $data;
-
-    /** @var array */
-    protected $languages;
+    protected array $data;
+    protected array $languages;
 
     /**
      * Memory constructor.
      * @param array $languages
      * @param array $data
      */
-    public function __construct(array $languages, array $data)
+    public function __construct(array $languages = [], array $data = [])
     {
         $this->languages = $languages;
         $this->data = $data;
@@ -50,7 +46,7 @@ class Memory implements Driver
     /**
      * @inheritDoc
      */
-    public function loadLanguage(string $language)
+    public function loadLanguage(string $language): ?array
     {
         return $this->languages[$language] ?? null;
     }
@@ -85,7 +81,7 @@ class Memory implements Driver
     /**
      * @inheritDoc
      */
-    public function loadNS(string $language, string $ns)
+    public function loadNS(string $language, string $ns): ?array
     {
         return $this->data[$language][$ns] ?? null;
     }

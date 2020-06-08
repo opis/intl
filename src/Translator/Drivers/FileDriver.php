@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +23,11 @@ use Opis\I18n\Translator\Driver;
 abstract class FileDriver implements Driver
 {
 
-    /** @var int */
-    protected $dirMode = 0777;
+    protected int $dirMode = 0777;
 
-    /** @var string */
-    protected $dir = null;
+    protected ?string $dir = null;
 
-    /** @var array|null */
-    protected $languageDefaults = null;
+    protected ?array $languageDefaults = null;
 
     /**
      * AbstractFileStorage constructor.
@@ -38,7 +35,7 @@ abstract class FileDriver implements Driver
      * @param int $dir_mode
      * @param array|null $defaults
      */
-    public function __construct(string $dir, int $dir_mode = 0775, array $defaults = null)
+    public function __construct(string $dir, int $dir_mode = 0775, ?array $defaults = null)
     {
         $this->dir = $dir;
         $this->dirMode = $dir_mode;
@@ -56,7 +53,7 @@ abstract class FileDriver implements Driver
     /**
      * @inheritDoc
      */
-    public function loadLanguage(string $language)
+    public function loadLanguage(string $language): ?array
     {
         if ($this->languageDefaults === null) {
             $file = $this->getDir() . DIRECTORY_SEPARATOR . 'defaults.' . $this->getExtension();
@@ -111,15 +108,12 @@ abstract class FileDriver implements Driver
     /**
      * @inheritDoc
      */
-    public function loadNS(string $language, string $ns)
+    public function loadNS(string $language, string $ns): ?array
     {
         $file = $this->getDir() . DIRECTORY_SEPARATOR . $language
             . DIRECTORY_SEPARATOR . $ns . '.' . $this->getExtension();
-        if (!file_exists($file)) {
-            return null;
-        }
 
-        return $this->importFileContent($file);
+        return is_file($file) ? $this->importFileContent($file) : null;
     }
 
     /**
@@ -139,7 +133,7 @@ abstract class FileDriver implements Driver
 
         $file = $dir . DIRECTORY_SEPARATOR . $ns . '.' . $this->getExtension();
         if ($keys === null) {
-            if (file_exists($keys)) {
+            if (is_file($keys)) {
                 return unlink($file);
             }
 
@@ -172,7 +166,7 @@ abstract class FileDriver implements Driver
      * @param array $to
      * @param array $add
      */
-    protected function mergeArrays(array &$to, array $add)
+    protected function mergeArrays(array &$to, array $add): void
     {
         foreach ($add as $key => $value) {
             if (!isset($to[$key])) {
@@ -236,7 +230,7 @@ abstract class FileDriver implements Driver
      * @param string $file
      * @return array|null
      */
-    abstract protected function importFileContent(string $file);
+    abstract protected function importFileContent(string $file): ?array;
 
     /**
      * @param array $data
