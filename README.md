@@ -15,7 +15,7 @@ Internationalization library
 
 ### Requirements
 
-* PHP ^7.4
+* PHP ^7.4|^8.0
 * ext-intl
 
 ## Installation

@@ -87,7 +87,7 @@ class DefaultPlural implements Plural
             $rule = null;
         } else {
             $rule = str_replace('n', '$n', static::fixRuleTernary($rule));
-            $rule = "return function (int \$n): int { return (int) ($rule);};";
+            $rule = "return static fn (int \$n): int => (int)($rule);";
             $rule = eval($rule);
             if (!($rule instanceof Closure)) {
                 $rule = null;
@@ -96,12 +96,8 @@ class DefaultPlural implements Plural
 
         if ($rule === null) {
             $rule = $forms === 1
-                ? function (int $count): int {
-                    return 0;
-                }
-                : function (int $count): int {
-                    return $count === 1 ? 0 : 1;
-                };
+                ? static fn(int $count): int => 0
+                : static fn(int $count): int => $count === 1 ? 0 : 1;
         }
 
         return $rule;

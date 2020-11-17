@@ -32,7 +32,7 @@ class DefaultDateTimeFormatter implements DateTimeFormatter
 
     /**
      * DateTimeFormatter constructor.
-     * @param IntlDateFormatter $formatter
+     * @param IntlDateFormatter|null $formatter
      */
     public function __construct(?IntlDateFormatter $formatter = null)
     {
